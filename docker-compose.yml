@@ -1,0 +1,22 @@
+version: '3.8'
+services:
+  app:
+    build:
+      context: .
+      dockerfile: ./.devcontainer/Dockerfile
+    ports:
+      - 8080:8080
+    volumes:
+      - ./src:/usr/src/app/src
+      - ./target:/usr/src/app/target
+  # app:
+  #   build: .
+  #   ports:
+  #     - "8080:8080"
+  #   volumes:
+  #     - ./src:/usr/src/app/src       # Bind mount for source code
+  #     - ./target:/usr/src/app/target # Bind mount for compiled code (if using DevTools)
+  #     - ~/.m2:/root/.m2      # Cache Maven dependencies locally
+  #   environment:
+  #     - SPRING_DEVTOOLS_REMOTE_SECRET=secret
+  #   command: mvn spring-boot:run
