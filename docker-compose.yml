@@ -9,6 +9,7 @@ services:
     volumes:
       - ./src:/usr/src/app/src
       - ./target:/usr/src/app/target
+      - ./data:/data 
   # app:
   #   build: .
   #   ports:

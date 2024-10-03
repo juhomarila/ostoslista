@@ -14,11 +14,15 @@ RUN ./mvnw -B package -DskipTests -Pprod -ntp
 
 FROM openjdk:22-ea-21-jdk-oraclelinux8
 
-WORKDIR /usr/src/app
+WORKDIR /usr/src
 
-COPY --from=build target/*.jar build.jar
+COPY --from=build /app/target/*.jar /app/build.jar
+COPY ./data/mydatabase.db /data/mydatabase.db
 
 RUN useradd -m user
 USER user
 
+WORKDIR /usr/src/app
+
 ENTRYPOINT java -jar -Dserver.port=${PORT:-8080} build.jar
+
