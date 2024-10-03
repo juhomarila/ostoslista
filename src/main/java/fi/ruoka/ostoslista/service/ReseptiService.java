@@ -6,13 +6,15 @@ import fi.ruoka.ostoslista.entity.ReseptiEntity;
 import java.util.List;
 
 public interface ReseptiService {
-    boolean createResepti(ReseptiDto dto);
+    ValidateServiceResult<ReseptiDto> createResepti(ReseptiDto dto);
 
-    List<ReseptiDto> getAllResepti();
+    ValidateServiceResult<List<ReseptiDto>> getAllResepti();
 
     ReseptiDto reseptiToDto(ReseptiEntity resepti);
 
-    ReseptiDto getReseptiById(Long id);
+    ValidateServiceResult<ReseptiDto> getReseptiById(Long id);
 
-    boolean deleteResepti(Long id);
+    ValidateServiceResult<Boolean> deleteResepti(Long id);
+
+    ValidateServiceResult<ReseptiDto> updateResepti(ReseptiDto dto);
 }

@@ -13,6 +13,7 @@ import fi.ruoka.ostoslista.dto.OstosDto;
 import fi.ruoka.ostoslista.dto.OstosListaDto;
 import fi.ruoka.ostoslista.entity.OstosEntity;
 import fi.ruoka.ostoslista.entity.OstosListaEntity;
+import fi.ruoka.ostoslista.logging.OstosListaLogger;
 
 @Service
 public class OstosListaServiceImpl implements OstosListaService {
@@ -20,45 +21,107 @@ public class OstosListaServiceImpl implements OstosListaService {
     @Autowired
     private OstosListaBusiness business;
 
-    @Override
-    public boolean createOstosLista(OstosListaDto dto) {
-        Optional<OstosListaEntity> optOstosLista = business.createOstosLista(dto);
-        if (optOstosLista.isPresent()) {
-            return true;
-        }
-        return false;
+    @Autowired
+    private OstosListaValidator validator;
+
+    private final OstosListaLogger logger;
+
+    @Autowired
+    public OstosListaServiceImpl(OstosListaLogger logger) {
+        this.logger = logger;
     }
 
     @Override
-    public List<OstosListaDto> getAllOstosLista() {
+    public ValidateServiceResult<OstosListaDto> createOstosLista(OstosListaDto dto) {
+        var vr = validator.validate(dto);
+        if (!vr.validated) {
+            logger.logValidationFailure(ValidationError.OLE102 + vr.getErrorMsg());
+            return new ValidateServiceResult<>(null, vr);
+        }
+        Optional<OstosListaEntity> optOstosLista = business.createOstosLista(dto);
+        if (optOstosLista.isPresent()) {
+            var ostosListaDto = ostosListaToDto(optOstosLista.get());
+            return new ValidateServiceResult<>(ostosListaDto, vr);
+        }
+        logger.logError(ValidationError.OLE104);
+        return new ValidateServiceResult<>(null, vr);
+    }
+
+    @Override
+    public ValidateServiceResult<List<OstosListaDto>> getAllOstosLista() {
         List<OstosListaDto> ostosListaDtos = business.getAllOstosLista().stream()
                 .map(ostosLista -> ostosListaToDto(ostosLista))
                 .collect(Collectors.toList());
-        return ostosListaDtos;
-    }
-
-    @Override
-    public OstosListaDto getOstosListaById(Long id) {
-        Optional<OstosListaEntity> entityOptional = business.getOstosListaById(id);
-        if (entityOptional.isPresent()) {
-            OstosListaEntity entity = entityOptional.get();
-            return ostosListaToDto(entity);
+        List<OstosListaDto> validatedOstosListaDtos = new ArrayList<>();
+        for (OstosListaDto ostosListaDto : ostosListaDtos) {
+            var vr = validator.validate(ostosListaDto);
+            if (vr.validated) {
+                validatedOstosListaDtos.add(ostosListaDto);
+            } else {
+                logger.logValidationAndIdFailure(ValidationError.OLE102 + vr.getErrorMsg(),
+                        ValidationError.OLE103 + ostosListaDto.getId().toString());
+            }
         }
-        return null;
+        return new ValidateServiceResult<>(validatedOstosListaDtos, new ValidationResult());
     }
 
     @Override
-    public boolean updateOstosLista(Long id, OstosListaDto dto) {
-        Optional<OstosListaEntity> optOstosLista = business.updateOstosLista(id, dto);
+    public ValidateServiceResult<OstosListaDto> getOstosListaById(Long id) {
+        Optional<OstosListaEntity> optOstosLista = business.getOstosListaById(id);
+        var vr = new ValidationResult();
+        if (optOstosLista.isEmpty()) {
+            List<String> errorMsg = new ArrayList<>();
+            errorMsg.add(ValidationError.VE001 + ".ostosListaEntity");
+            vr.setErrorMsg(errorMsg);
+
+            logger.logValidationFailure(ValidationError.OLE101 + vr.getErrorMsg());
+            return new ValidateServiceResult<>(null, vr);
+        }
+        var ostosListaDto = ostosListaToDto(optOstosLista.get());
+        vr = validator.validate(ostosListaDto);
+
+        if (!vr.validated) {
+            logger.logValidationAndIdFailure(ValidationError.OLE102 + vr.getErrorMsg(),
+                    ValidationError.OLE103 + ostosListaDto.getId().toString());
+            return new ValidateServiceResult<>(null, vr);
+        }
+        return new ValidateServiceResult<>(ostosListaDto, vr);
+    }
+
+    @Override
+    public ValidateServiceResult<OstosListaDto> updateOstosLista(OstosListaDto dto) {
+        var vr = validator.validate(dto);
+        if (!vr.validated) {
+            logger.logValidationFailure(ValidationError.OLE102 + vr.getErrorMsg());
+            return new ValidateServiceResult<>(null, vr);
+        }
+        Optional<OstosListaEntity> optOstosLista = business.updateOstosLista(dto);
         if (optOstosLista.isPresent()) {
-            return true;
+            var ostosListaDto = ostosListaToDto(optOstosLista.get());
+            return new ValidateServiceResult<>(ostosListaDto, vr);
         }
-        return false;
+        logger.logError(ValidationError.OLE105);
+        return new ValidateServiceResult<>(null, vr);
     }
 
     @Override
-    public boolean deleteOstosLista(Long id) {
-        return business.deleteOstosLista(id);
+    public ValidateServiceResult<Boolean> deleteOstosLista(Long id) {
+        Optional<OstosListaEntity> optResepti = business.getOstosListaById(id);
+        var vr = new ValidationResult();
+        var errorMsg = new ArrayList<String>();
+
+        if (optResepti.isEmpty()) {
+            errorMsg.add(ValidationError.VE001 + ".ostosListaEntity");
+            vr.setErrorMsg(errorMsg);
+
+            logger.logValidationFailure(ValidationError.RE101 + vr.getErrorMsg());
+            return new ValidateServiceResult<>(false, vr);
+        }
+        vr = validator.validate(ostosListaToDto(optResepti.get()));
+        if (vr.validated) {
+            business.deleteOstosLista(optResepti.get().getId());
+        }
+        return new ValidateServiceResult<>(vr.validated, vr);
     }
 
     private OstosListaDto ostosListaToDto(OstosListaEntity entity) {

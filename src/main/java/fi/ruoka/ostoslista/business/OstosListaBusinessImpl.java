@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.time.Instant;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +22,8 @@ public class OstosListaBusinessImpl implements OstosListaBusiness {
     @Autowired
     private OstosListaRepository repository;
 
+    private static final Logger logger = LoggerFactory.getLogger(OstosListaBusinessImpl.class);
+
     @Override
     public Optional<OstosListaEntity> getOstosListaById(Long id) {
         return repository.findById(id);
@@ -32,55 +36,68 @@ public class OstosListaBusinessImpl implements OstosListaBusiness {
 
     @Override
     public Optional<OstosListaEntity> createOstosLista(OstosListaDto dto) {
-        OstosListaEntity ostosLista = new OstosListaEntity();
-        ostosLista = saveOstosLista(ostosLista, dto);
-        return Optional.of(ostosLista);
+        try {
+            OstosListaEntity ostosLista = new OstosListaEntity();
+            ostosLista = saveOstosLista(ostosLista, dto);
+            return Optional.of(ostosLista);
+        } catch (Exception e) {
+            logger.error(ErrorMessages.OL_SAVE_ERROR + e.getMessage(), e);
+            e.printStackTrace();
+            return Optional.empty();
+        }
     }
 
     @Override
-    public Optional<OstosListaEntity> updateOstosLista(Long id, OstosListaDto dto) {
-        Optional<OstosListaEntity> optOstosLista = repository.findById(id);
-        if (optOstosLista.isPresent()) {
-            OstosListaEntity ostosLista = optOstosLista.get();
+    public Optional<OstosListaEntity> updateOstosLista(OstosListaDto dto) {
+        try {
+            Optional<OstosListaEntity> optOstosLista = repository.findById(dto.getId());
+            if (optOstosLista.isPresent()) {
+                OstosListaEntity ostosLista = optOstosLista.get();
 
-            if (dto.getNimi() != null) {
-                ostosLista.setNimi(dto.getNimi());
-            }
+                if (dto.getNimi() != null) {
+                    ostosLista.setNimi(dto.getNimi());
+                }
 
-            if (dto.getOstokset() != null) {
-                List<OstosEntity> existingOstokset = ostosLista.getOstokset();
-                List<OstosEntity> updatedOstokset = dto.getOstokset().stream()
-                        .map(this::ostosToEntity)
-                        .collect(Collectors.toList());
+                if (dto.getOstokset() != null) {
+                    List<OstosEntity> existingOstokset = ostosLista.getOstokset();
+                    List<OstosEntity> updatedOstokset = dto.getOstokset().stream()
+                            .map(this::ostosToEntity)
+                            .collect(Collectors.toList());
 
-                for (OstosEntity updatedOstos : updatedOstokset) {
-                    boolean found = false;
-                    for (OstosEntity existingOstos : existingOstokset) {
-                        if (existingOstos.getId() != null && existingOstos.getId().equals(updatedOstos.getId())) {
-                            existingOstos.setMaara(updatedOstos.getMaara());
-                            existingOstos.setTuote(updatedOstos.getTuote());
-                            existingOstos.setYksikko(updatedOstos.getYksikko());
-                            existingOstos.setOstosLista(updatedOstos.getOstosLista());
-                            found = true;
-                            break;
+                    for (OstosEntity updatedOstos : updatedOstokset) {
+                        boolean found = false;
+                        for (OstosEntity existingOstos : existingOstokset) {
+                            if (existingOstos.getId() != null && existingOstos.getId().equals(updatedOstos.getId())) {
+                                existingOstos.setMaara(updatedOstos.getMaara());
+                                existingOstos.setTuote(updatedOstos.getTuote());
+                                existingOstos.setYksikko(updatedOstos.getYksikko());
+                                existingOstos.setOstosLista(updatedOstos.getOstosLista());
+                                found = true;
+                                break;
+                            }
+                        }
+                        if (!found) {
+                            updatedOstos.setOstosLista(ostosLista);
+                            existingOstokset.add(updatedOstos);
                         }
                     }
-                    if (!found) {
-                        updatedOstos.setOstosLista(ostosLista);
-                        existingOstokset.add(updatedOstos);
-                    }
+                    ostosLista.setOstokset(existingOstokset);
                 }
-                ostosLista.setOstokset(existingOstokset);
-            }
 
-            repository.save(ostosLista);
-            return Optional.of(ostosLista);
+                repository.save(ostosLista);
+                return Optional.of(ostosLista);
+            }
+            return Optional.empty();
+
+        } catch (Exception e) {
+            logger.error(ErrorMessages.OL_UPDATE_ERROR + e.getMessage(), e);
+            e.printStackTrace();
+            return Optional.empty();
         }
-        return Optional.empty();
     }
 
     @Override
-    public boolean deleteOstosLista(Long id) {
+    public Boolean deleteOstosLista(Long id) {
         Optional<OstosListaEntity> optOstosLista = repository.findById(id);
         if (optOstosLista.isPresent()) {
             repository.delete(optOstosLista.get());

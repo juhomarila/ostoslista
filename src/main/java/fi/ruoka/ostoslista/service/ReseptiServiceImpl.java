@@ -13,6 +13,7 @@ import fi.ruoka.ostoslista.dto.ReseptiDto;
 import fi.ruoka.ostoslista.dto.RuokaAineDto;
 import fi.ruoka.ostoslista.entity.ReseptiEntity;
 import fi.ruoka.ostoslista.entity.RuokaAineEntity;
+import fi.ruoka.ostoslista.logging.OstosListaLogger;
 
 @Service
 public class ReseptiServiceImpl implements ReseptiService {
@@ -20,35 +21,106 @@ public class ReseptiServiceImpl implements ReseptiService {
     @Autowired
     private ReseptiBusiness business;
 
-    @Override
-    public boolean createResepti(ReseptiDto dto) {
-        Optional<ReseptiEntity> optResepti = business.createResepti(dto);
-        if (optResepti.isPresent()) {
-            return true;
-        }
-        return false;
+    @Autowired
+    private ReseptiValidator validator;
+
+    private final OstosListaLogger logger;
+
+    @Autowired
+    public ReseptiServiceImpl(OstosListaLogger logger) {
+        this.logger = logger;
     }
 
     @Override
-    public List<ReseptiDto> getAllResepti() {
+    public ValidateServiceResult<ReseptiDto> createResepti(ReseptiDto dto) {
+        var vr = validator.validate(dto, true);
+        if (!vr.validated) {
+            logger.logValidationFailure(ValidationError.RE102 + vr.getErrorMsg());
+            return new ValidateServiceResult<>(null, vr);
+        }
+        var optResepti = business.createResepti(dto);
+        if (optResepti.isPresent()) {
+            var reseptiDto = reseptiToDto(optResepti.get());
+            return new ValidateServiceResult<>(reseptiDto, vr);
+        }
+        logger.logError(ValidationError.RE104);
+        return new ValidateServiceResult<>(null, vr);
+    }
+
+    @Override
+    public ValidateServiceResult<List<ReseptiDto>> getAllResepti() {
         List<ReseptiDto> reseptiDtos = business.getAllResepti().stream().map(res -> reseptiToDto(res))
                 .collect(Collectors.toList());
-        return reseptiDtos;
-    }
-
-    @Override
-    public ReseptiDto getReseptiById(Long id) {
-        Optional<ReseptiEntity> entityOptional = business.getReseptiById(id);
-        if (entityOptional.isPresent()) {
-            ReseptiEntity entity = entityOptional.get();
-            return reseptiToDto(entity);
+        List<ReseptiDto> validatedReseptiDtos = new ArrayList<>();
+        for (ReseptiDto reseptiDto : reseptiDtos) {
+            var vr = validator.validate(reseptiDto, false);
+            if (vr.validated) {
+                validatedReseptiDtos.add(reseptiDto);
+            } else {
+                logger.logValidationAndIdFailure(ValidationError.RE102 + vr.getErrorMsg(),
+                        ValidationError.RE103 + reseptiDto.getId().toString());
+            }
         }
-        return null;
+        return new ValidateServiceResult<>(validatedReseptiDtos, new ValidationResult());
     }
 
     @Override
-    public boolean deleteResepti(Long id) {
-        return business.deleteResepti(id);
+    public ValidateServiceResult<ReseptiDto> getReseptiById(Long id) {
+        Optional<ReseptiEntity> optResepti = business.getReseptiById(id);
+        var vr = new ValidationResult();
+        if (optResepti.isEmpty()) {
+            List<String> errorMsg = new ArrayList<>();
+            errorMsg.add(ValidationError.VE001 + ".reseptiEntity");
+            vr.setErrorMsg(errorMsg);
+
+            logger.logValidationFailure(ValidationError.RE101 + vr.getErrorMsg());
+            return new ValidateServiceResult<>(null, vr);
+        }
+        var reseptiDto = reseptiToDto(optResepti.get());
+        vr = validator.validate(reseptiDto, false);
+
+        if (!vr.validated) {
+            logger.logValidationAndIdFailure(ValidationError.RE102 + vr.getErrorMsg(),
+                    ValidationError.RE103 + reseptiDto.getId().toString());
+            return new ValidateServiceResult<>(null, vr);
+        }
+        return new ValidateServiceResult<>(reseptiDto, vr);
+    }
+
+    @Override
+    public ValidateServiceResult<Boolean> deleteResepti(Long id) {
+        Optional<ReseptiEntity> optResepti = business.getReseptiById(id);
+        var vr = new ValidationResult();
+        var errorMsg = new ArrayList<String>();
+
+        if (optResepti.isEmpty()) {
+            errorMsg.add(ValidationError.VE001 + ".reseptiEntity");
+            vr.setErrorMsg(errorMsg);
+
+            logger.logValidationFailure(ValidationError.RE101 + vr.getErrorMsg());
+            return new ValidateServiceResult<>(false, vr);
+        }
+        vr = validator.validate(reseptiToDto(optResepti.get()), false);
+        if (vr.validated) {
+            business.deleteResepti(optResepti.get().getId());
+        }
+        return new ValidateServiceResult<>(vr.validated, vr);
+    }
+
+    @Override
+    public ValidateServiceResult<ReseptiDto> updateResepti(ReseptiDto dto) {
+        var vr = validator.validate(dto, false);
+        if (!vr.validated) {
+            logger.logValidationFailure(ValidationError.RE102 + vr.getErrorMsg());
+            return new ValidateServiceResult<>(null, vr);
+        }
+        var optResepti = business.updateResepti(dto);
+        if (optResepti.isPresent()) {
+            var reseptiDto = reseptiToDto(optResepti.get());
+            return new ValidateServiceResult<>(reseptiDto, vr);
+        }
+        logger.logError(ValidationError.RE105);
+        return new ValidateServiceResult<>(null, vr);
     }
 
     @Override

@@ -5,13 +5,13 @@ import java.util.List;
 import fi.ruoka.ostoslista.dto.OstosListaDto;
 
 public interface OstosListaService {
-    boolean createOstosLista(OstosListaDto dto);
+    ValidateServiceResult<OstosListaDto> createOstosLista(OstosListaDto dto);
 
-    OstosListaDto getOstosListaById(Long id);
+    ValidateServiceResult<OstosListaDto> getOstosListaById(Long id);
 
-    boolean updateOstosLista(Long id, OstosListaDto dto);
+    ValidateServiceResult<OstosListaDto> updateOstosLista(OstosListaDto dto);
 
-    boolean deleteOstosLista(Long id);
+    ValidateServiceResult<Boolean> deleteOstosLista(Long id);
 
-    List<OstosListaDto> getAllOstosLista();
+    ValidateServiceResult<List<OstosListaDto>> getAllOstosLista();
 }

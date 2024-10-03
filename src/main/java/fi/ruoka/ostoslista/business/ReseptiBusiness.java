@@ -13,5 +13,7 @@ public interface ReseptiBusiness {
 
     Optional<ReseptiEntity> getReseptiById(Long id);
 
-    boolean deleteResepti(Long id);
+    Boolean deleteResepti(Long id);
+
+    Optional<ReseptiEntity> updateResepti(ReseptiDto dto);
 }

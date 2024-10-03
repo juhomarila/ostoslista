@@ -6,5 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ReseptiRepository extends JpaRepository<ReseptiEntity, Long> {
-
+    boolean existsByNimi(String nimi);
 }

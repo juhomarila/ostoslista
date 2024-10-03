@@ -11,9 +11,9 @@ public interface OstosListaBusiness {
 
     Optional<OstosListaEntity> createOstosLista(OstosListaDto dto);
 
-    Optional<OstosListaEntity> updateOstosLista(Long id, OstosListaDto dto);
+    Optional<OstosListaEntity> updateOstosLista(OstosListaDto dto);
 
-    boolean deleteOstosLista(Long id);
+    Boolean deleteOstosLista(Long id);
 
     List<OstosListaEntity> getAllOstosLista();
 }

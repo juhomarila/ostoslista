@@ -1,9 +1,14 @@
 package fi.ruoka.ostoslista.business;
 
+import java.util.Optional;
+
 import fi.ruoka.ostoslista.dto.OstosDto;
+import fi.ruoka.ostoslista.entity.OstosEntity;
 
 public interface OstosBusiness {
-    boolean deleteOstos(Long id);
+    Boolean deleteOstos(Long id);
 
-    boolean addOstos(Long id, OstosDto dto);
+    Optional<OstosEntity> addOstos(Long id, OstosDto dto);
+
+    Optional<OstosEntity> getOstosById(Long id);
 }

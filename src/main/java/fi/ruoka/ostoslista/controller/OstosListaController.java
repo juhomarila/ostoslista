@@ -16,6 +16,7 @@ import fi.ruoka.ostoslista.service.OstosListaService;
 import fi.ruoka.ostoslista.service.OstosService;
 import fi.ruoka.ostoslista.dto.OstosDto;
 import fi.ruoka.ostoslista.dto.OstosListaDto;
+import fi.ruoka.ostoslista.logging.OstosListaLogger;
 
 @RestController
 @RequestMapping("/api/ostoslista")
@@ -27,62 +28,79 @@ public class OstosListaController {
     @Autowired
     private OstosService ostosService;
 
+    private final OstosListaLogger logger;
+
+    @Autowired
+    public OstosListaController(OstosListaLogger logger) {
+        this.logger = logger;
+    }
+
     @PostMapping
     public ResponseEntity<?> createOstosLista(@RequestBody OstosListaDto dto) {
-        boolean savedOstosLista = ostosListaService.createOstosLista(dto);
-        System.out.println(dto);
-
-        if (savedOstosLista) {
-            return new ResponseEntity<>(HttpStatus.CREATED);
-        }
-        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        logger.postLogStart("createOstosLista");
+        var vsr = ostosListaService.createOstosLista(dto);
+        logger.postLogEnd("createOstosLista");
+        return vsr.getVr().validated ? new ResponseEntity<>(vsr.getT(), HttpStatus.OK)
+                : new ResponseEntity<>(vsr.getVr().getErrorMsg(),
+                        vsr.getVr().validated ? HttpStatus.BAD_REQUEST : HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     @GetMapping
     public ResponseEntity<?> getAllOstosLista() {
-        return ResponseEntity.ok(ostosListaService.getAllOstosLista());
+        logger.getLogStart("getAllOstosLista");
+        var vsr = ostosListaService.getAllOstosLista();
+        logger.getLogEnd("getAllOstosLista");
+        return vsr.getT().isEmpty() ? ResponseEntity.notFound().build() : ResponseEntity.ok(vsr.getT());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<OstosListaDto> getOstosListaById(@PathVariable Long id) {
-        OstosListaDto ostosLista = ostosListaService.getOstosListaById(id);
-        return ResponseEntity.ok(ostosLista);
+    public ResponseEntity<?> getOstosListaById(@PathVariable Long id) {
+        logger.getLogStart("getOstosListaById");
+        var vsr = ostosListaService.getOstosListaById(id);
+        logger.getLogEnd("getOstosListaById");
+        return vsr.getVr().validated ? new ResponseEntity<>(vsr.getT(), HttpStatus.OK)
+                : new ResponseEntity<>(vsr.getVr().getErrorMsg(),
+                        vsr.getVr().validated ? HttpStatus.BAD_REQUEST : HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateOstosLista(@PathVariable Long id, @RequestBody OstosListaDto dto) {
-        boolean updatedOstosLista = ostosListaService.updateOstosLista(id, dto);
-        if (updatedOstosLista) {
-            return new ResponseEntity<>(HttpStatus.OK);
-        }
-        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    public ResponseEntity<?> updateOstosLista(@RequestBody OstosListaDto dto) {
+        logger.putLogStart("updateOstosLista");
+        var vsr = ostosListaService.updateOstosLista(dto);
+        logger.putLogEnd("updateOstosLista");
+        return vsr.getVr().validated ? new ResponseEntity<>(vsr.getT(), HttpStatus.OK)
+                : new ResponseEntity<>(vsr.getVr().getErrorMsg(),
+                        vsr.getVr().validated ? HttpStatus.BAD_REQUEST : HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteOstosLista(@PathVariable Long id) {
-        boolean deletedOstosLista = ostosListaService.deleteOstosLista(id);
-        if (deletedOstosLista) {
-            return new ResponseEntity<>(HttpStatus.OK);
-        }
-        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        logger.deleteLogStart("deleteOstosLista");
+        var vsr = ostosListaService.deleteOstosLista(id);
+        logger.deleteLogEnd("deleteOstosLista");
+        return vsr.getVr().validated ? new ResponseEntity<>(vsr.getT(), HttpStatus.OK)
+                : new ResponseEntity<>(vsr.getVr().getErrorMsg(),
+                        vsr.getVr().validated ? HttpStatus.BAD_REQUEST : HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     @DeleteMapping("/ostos/{id}")
     public ResponseEntity<?> deleteOstos(@PathVariable Long id) {
-        boolean deletedOstos = ostosService.deleteOstos(id);
-        if (deletedOstos) {
-            return new ResponseEntity<>(HttpStatus.OK);
-        }
-        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        logger.deleteLogStart("deleteOstos");
+        var vsr = ostosService.deleteOstos(id);
+        logger.deleteLogEnd("deleteOstos");
+        return vsr.getVr().validated ? new ResponseEntity<>(vsr.getT(), HttpStatus.OK)
+                : new ResponseEntity<>(vsr.getVr().getErrorMsg(),
+                        vsr.getVr().validated ? HttpStatus.BAD_REQUEST : HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     @PostMapping("/ostos/{id}")
     public ResponseEntity<?> addOstos(@PathVariable Long id, @RequestBody OstosDto dto) {
-        boolean addedOstos = ostosService.addOstos(id, dto);
-        if (addedOstos) {
-            return new ResponseEntity<>(HttpStatus.OK);
-        }
-        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        logger.postLogStart("addOstos");
+        var vsr = ostosService.addOstos(id, dto);
+        logger.postLogEnd("addOstos");
+        return vsr.getVr().validated ? new ResponseEntity<>(vsr.getT(), HttpStatus.OK)
+                : new ResponseEntity<>(vsr.getVr().getErrorMsg(),
+                        vsr.getVr().validated ? HttpStatus.BAD_REQUEST : HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
 }
