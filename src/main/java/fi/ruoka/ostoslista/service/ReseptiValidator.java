@@ -22,7 +22,7 @@ public class ReseptiValidator {
             }
         }
 
-        checkRequiredFields(dto, errorMsg);
+        checkRequiredFields(dto, errorMsg, false);
 
         if (!errorMsg.isEmpty()) {
             return new ValidationResult(errorMsg, false);
@@ -30,17 +30,24 @@ public class ReseptiValidator {
         return new ValidationResult(true);
     }
 
-    // TODO update
+    public ValidationResult validateUpdate(ReseptiDto dto, Long id) {
+        var errorMsg = new ArrayList<String>();
 
-    private void checkRequiredFields(ReseptiDto dto, ArrayList<String> errorMsg) {
+        if (reseptiRepository.findById(id).isEmpty()) {
+            errorMsg.add(ValidationError.VE005 + ".resepti");
+        }
+
+        checkRequiredFields(dto, errorMsg, true);
+
+        if (!errorMsg.isEmpty()) {
+            return new ValidationResult(errorMsg, false);
+        }
+        return new ValidationResult(true);
+    }
+
+    private void checkRequiredFields(ReseptiDto dto, ArrayList<String> errorMsg, boolean isUpdate) {
         if (dto.getNimi() == null || dto.getNimi().length() < 1) {
             errorMsg.add(ValidationError.VE001 + ".nimi");
-        }
-        if (dto.getOhje() == null || dto.getOhje().length() < 1) {
-            errorMsg.add(ValidationError.VE001 + ".ohje");
-        }
-        if (dto.getRuokaAineet() == null || dto.getRuokaAineet().isEmpty()) {
-            errorMsg.add(ValidationError.VE001 + ".ruokaaineet");
         }
         if (dto.getRuokaAineet() != null) {
             dto.getRuokaAineet().forEach(ra -> {
@@ -52,6 +59,9 @@ public class ReseptiValidator {
                 }
                 if (ra.getYksikko() == null || ra.getYksikko().length() < 1) {
                     errorMsg.add(ValidationError.VE001 + ".yksikko");
+                }
+                if (isUpdate && ra.getId() == null) {
+                    errorMsg.add(ValidationError.VE001 + ".id");
                 }
             });
         }

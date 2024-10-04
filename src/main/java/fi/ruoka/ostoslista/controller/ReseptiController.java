@@ -58,7 +58,7 @@ public class ReseptiController {
         logger.getLogEnd("getReseptiById");
         return vsr.getVr().validated ? new ResponseEntity<>(vsr.getT(), HttpStatus.OK)
                 : new ResponseEntity<>(vsr.getVr().getErrorMsg(),
-                        vsr.getVr().validated ? HttpStatus.BAD_REQUEST : HttpStatus.INTERNAL_SERVER_ERROR);
+                        vsr.getVr().validated ? HttpStatus.BAD_REQUEST : HttpStatus.NOT_FOUND);
     }
 
     @DeleteMapping("/{id}")
@@ -68,16 +68,16 @@ public class ReseptiController {
         logger.deleteLogEnd("deleteResepti");
         return vsr.getVr().validated ? new ResponseEntity<>(vsr.getT(), HttpStatus.OK)
                 : new ResponseEntity<>(vsr.getVr().getErrorMsg(),
-                        vsr.getVr().validated ? HttpStatus.BAD_REQUEST : HttpStatus.INTERNAL_SERVER_ERROR);
+                        vsr.getVr().validated ? HttpStatus.BAD_REQUEST : HttpStatus.NOT_FOUND);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<?> updateResepti(@PathVariable Long id, @RequestBody ReseptiDto dto) {
         logger.putLogStart("updateResepti");
-        var vsr = reseptiService.updateResepti(dto);
+        var vsr = reseptiService.updateResepti(id, dto);
         logger.putLogEnd("updateResepti");
         return vsr.getVr().validated ? new ResponseEntity<>(vsr.getT(), HttpStatus.OK)
                 : new ResponseEntity<>(vsr.getVr().getErrorMsg(),
-                        vsr.getVr().validated ? HttpStatus.BAD_REQUEST : HttpStatus.INTERNAL_SERVER_ERROR);
+                        !vsr.getVr().validated ? HttpStatus.BAD_REQUEST : HttpStatus.NOT_FOUND);
     }
 }

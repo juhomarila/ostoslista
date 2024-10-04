@@ -1,6 +1,8 @@
 package fi.ruoka.ostoslista.business;
 
 import java.util.Optional;
+import java.util.Iterator;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,22 +28,43 @@ public class OstosBusinessImpl implements OstosBusiness {
 
     @Override
     public Boolean deleteOstos(Long id) {
-        ostosRepository.deleteById(id);
-        return true;
+        try {
+            if (ostosRepository.existsById(id)) {
+                OstosEntity ostosEntity = ostosRepository.findById(id).get();
+                Optional<OstosListaEntity> optOstosListaEntity = ostosListaRepository
+                        .findById(ostosEntity.getOstosLista().getId());
+                if (optOstosListaEntity.isPresent()) {
+                    optOstosListaEntity.get().getOstokset().remove(ostosEntity);
+                    ostosListaRepository.save(ostosEntity.getOstosLista());
+                    logger.info("OstosEntity with id {} deleted successfully.", id);
+                    return true;
+                } else {
+                    logger.warn("OstosListaEntity with id {} not found.", ostosEntity.getOstosLista().getId());
+                    return false;
+                }
+            } else {
+                logger.warn("OstosEntity with id {} not found.", id);
+                return false;
+            }
+        } catch (Exception e) {
+            logger.error("Error deleting OstosEntity with id {}: {}", id, e.getMessage(), e);
+            return false;
+        }
     }
 
     @Override
     public Optional<OstosEntity> addOstos(Long id, OstosDto dto) {
         try {
-            OstosEntity ostos = new OstosEntity();
-            ostos.setMaara(dto.getMaara());
-            ostos.setTuote(dto.getTuote());
-            ostos.setYksikko(dto.getYksikko());
             Optional<OstosListaEntity> optOstosLista = ostosListaRepository.findById(id);
             if (optOstosLista.isPresent()) {
-                ostos.setOstosLista(optOstosLista.get());
+                OstosListaEntity ostosListaEntity = optOstosLista.get();
+                OstosEntity ostos = new OstosEntity();
+                ostos.setMaara(dto.getMaara());
+                ostos.setTuote(dto.getTuote());
+                ostos.setYksikko(dto.getYksikko());
+                ostos.setOstosLista(ostosListaEntity);
                 ostosRepository.save(ostos);
-                return ostosRepository.findById(ostos.getId());
+                return Optional.of(ostos);
             }
         } catch (Exception e) {
             logger.error(ErrorMessages.OSTOS_SAVE_ERROR + e.getMessage(), e);

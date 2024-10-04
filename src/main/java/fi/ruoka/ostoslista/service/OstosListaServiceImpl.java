@@ -89,13 +89,13 @@ public class OstosListaServiceImpl implements OstosListaService {
     }
 
     @Override
-    public ValidateServiceResult<OstosListaDto> updateOstosLista(OstosListaDto dto) {
-        var vr = validator.validate(dto);
+    public ValidateServiceResult<OstosListaDto> updateOstosLista(Long id, OstosListaDto dto) {
+        var vr = validator.validateUpdate(dto, id);
         if (!vr.validated) {
             logger.logValidationFailure(ValidationError.OLE102 + vr.getErrorMsg());
             return new ValidateServiceResult<>(null, vr);
         }
-        Optional<OstosListaEntity> optOstosLista = business.updateOstosLista(dto);
+        Optional<OstosListaEntity> optOstosLista = business.updateOstosLista(id, dto);
         if (optOstosLista.isPresent()) {
             var ostosListaDto = ostosListaToDto(optOstosLista.get());
             return new ValidateServiceResult<>(ostosListaDto, vr);
@@ -106,20 +106,20 @@ public class OstosListaServiceImpl implements OstosListaService {
 
     @Override
     public ValidateServiceResult<Boolean> deleteOstosLista(Long id) {
-        Optional<OstosListaEntity> optResepti = business.getOstosListaById(id);
+        Optional<OstosListaEntity> optOstosLista = business.getOstosListaById(id);
         var vr = new ValidationResult();
         var errorMsg = new ArrayList<String>();
 
-        if (optResepti.isEmpty()) {
+        if (optOstosLista.isEmpty()) {
             errorMsg.add(ValidationError.VE001 + ".ostosListaEntity");
             vr.setErrorMsg(errorMsg);
 
             logger.logValidationFailure(ValidationError.RE101 + vr.getErrorMsg());
             return new ValidateServiceResult<>(false, vr);
         }
-        vr = validator.validate(ostosListaToDto(optResepti.get()));
+        vr = validator.validate(ostosListaToDto(optOstosLista.get()));
         if (vr.validated) {
-            business.deleteOstosLista(optResepti.get().getId());
+            business.deleteOstosLista(optOstosLista.get().getId());
         }
         return new ValidateServiceResult<>(vr.validated, vr);
     }

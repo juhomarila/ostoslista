@@ -1,6 +1,7 @@
 package fi.ruoka.ostoslista.business;
 
 import java.util.Optional;
+import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.time.Instant;
@@ -15,12 +16,16 @@ import fi.ruoka.ostoslista.dto.OstosListaDto;
 import fi.ruoka.ostoslista.entity.OstosEntity;
 import fi.ruoka.ostoslista.entity.OstosListaEntity;
 import fi.ruoka.ostoslista.repository.OstosListaRepository;
+import fi.ruoka.ostoslista.repository.OstosRepository;
 
 @Service
 public class OstosListaBusinessImpl implements OstosListaBusiness {
 
     @Autowired
     private OstosListaRepository repository;
+
+    @Autowired
+    private OstosRepository ostosRepository;
 
     private static final Logger logger = LoggerFactory.getLogger(OstosListaBusinessImpl.class);
 
@@ -39,6 +44,7 @@ public class OstosListaBusinessImpl implements OstosListaBusiness {
         try {
             OstosListaEntity ostosLista = new OstosListaEntity();
             ostosLista = saveOstosLista(ostosLista, dto);
+            logger.info("OstosListaEntity with id {} created successfully.", ostosLista.getId());
             return Optional.of(ostosLista);
         } catch (Exception e) {
             logger.error(ErrorMessages.OL_SAVE_ERROR + e.getMessage(), e);
@@ -48,44 +54,41 @@ public class OstosListaBusinessImpl implements OstosListaBusiness {
     }
 
     @Override
-    public Optional<OstosListaEntity> updateOstosLista(OstosListaDto dto) {
+    public Optional<OstosListaEntity> updateOstosLista(Long id, OstosListaDto dto) {
         try {
-            Optional<OstosListaEntity> optOstosLista = repository.findById(dto.getId());
+            Optional<OstosListaEntity> optOstosLista = repository.findById(id);
             if (optOstosLista.isPresent()) {
-                OstosListaEntity ostosLista = optOstosLista.get();
-
-                if (dto.getNimi() != null) {
-                    ostosLista.setNimi(dto.getNimi());
-                }
-
-                if (dto.getOstokset() != null) {
-                    List<OstosEntity> existingOstokset = ostosLista.getOstokset();
-                    List<OstosEntity> updatedOstokset = dto.getOstokset().stream()
-                            .map(this::ostosToEntity)
-                            .collect(Collectors.toList());
-
-                    for (OstosEntity updatedOstos : updatedOstokset) {
-                        boolean found = false;
-                        for (OstosEntity existingOstos : existingOstokset) {
-                            if (existingOstos.getId() != null && existingOstos.getId().equals(updatedOstos.getId())) {
-                                existingOstos.setMaara(updatedOstos.getMaara());
-                                existingOstos.setTuote(updatedOstos.getTuote());
-                                existingOstos.setYksikko(updatedOstos.getYksikko());
-                                existingOstos.setOstosLista(updatedOstos.getOstosLista());
-                                found = true;
-                                break;
-                            }
-                        }
-                        if (!found) {
-                            updatedOstos.setOstosLista(ostosLista);
-                            existingOstokset.add(updatedOstos);
-                        }
+                OstosListaEntity ostosListaEntity = optOstosLista.get();
+                Iterator<OstosEntity> iterator = ostosListaEntity.getOstokset().iterator();
+                while (iterator.hasNext()) {
+                    OstosEntity ostos = iterator.next();
+                    if (dto.getOstokset().stream().noneMatch(o -> o.getId().equals(ostos.getId()))) {
+                        iterator.remove();
+                        ostosRepository.delete(ostos);
                     }
-                    ostosLista.setOstokset(existingOstokset);
                 }
 
-                repository.save(ostosLista);
-                return Optional.of(ostosLista);
+                dto.getOstokset().forEach(ostosDto -> {
+                    if (ostosDto.getId() != null) {
+                        OstosEntity ostos = ostosListaEntity.getOstokset().stream()
+                                .filter(o -> o.getId().equals(ostosDto.getId()))
+                                .findFirst().get();
+                        ostos.setOstosLista(ostosListaEntity);
+                        ostos.setMaara(ostosDto.getMaara());
+                        ostos.setTuote(ostosDto.getTuote());
+                        ostos.setYksikko(ostosDto.getYksikko());
+                    } else {
+                        OstosEntity ostos = new OstosEntity();
+                        ostos.setMaara(ostosDto.getMaara());
+                        ostos.setTuote(ostosDto.getTuote());
+                        ostos.setYksikko(ostosDto.getYksikko());
+                        ostos.setOstosLista(ostosListaEntity);
+                        ostosListaEntity.getOstokset().add(ostos);
+                    }
+                });
+                ostosListaEntity.setNimi(dto.getNimi());
+                repository.save(ostosListaEntity);
+                return Optional.of(ostosListaEntity);
             }
             return Optional.empty();
 

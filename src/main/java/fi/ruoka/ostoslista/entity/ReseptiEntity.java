@@ -23,11 +23,9 @@ public class ReseptiEntity {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @NotNull
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "resepti", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<RuokaAineEntity> ruokaAineet;
 
-    @NotBlank
     private String ohje;
 
     @NotBlank

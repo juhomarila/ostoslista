@@ -15,5 +15,5 @@ public interface ReseptiBusiness {
 
     Boolean deleteResepti(Long id);
 
-    Optional<ReseptiEntity> updateResepti(ReseptiDto dto);
+    Optional<ReseptiEntity> updateResepti(Long id, ReseptiDto dto);
 }

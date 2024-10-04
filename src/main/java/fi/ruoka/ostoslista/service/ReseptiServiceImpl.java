@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import fi.ruoka.ostoslista.business.ReseptiBusiness;
+import fi.ruoka.ostoslista.business.ReseptiError;
 import fi.ruoka.ostoslista.dto.ReseptiDto;
 import fi.ruoka.ostoslista.dto.RuokaAineDto;
 import fi.ruoka.ostoslista.entity.ReseptiEntity;
@@ -108,16 +109,22 @@ public class ReseptiServiceImpl implements ReseptiService {
     }
 
     @Override
-    public ValidateServiceResult<ReseptiDto> updateResepti(ReseptiDto dto) {
-        var vr = validator.validate(dto, false);
+    public ValidateServiceResult<ReseptiDto> updateResepti(Long id, ReseptiDto dto) {
+        var vr = validator.validateUpdate(dto, id);
         if (!vr.validated) {
-            logger.logValidationFailure(ValidationError.RE102 + vr.getErrorMsg());
+            logger.logValidationFailure(ValidationError.RE101 + vr.getErrorMsg());
             return new ValidateServiceResult<>(null, vr);
         }
-        var optResepti = business.updateResepti(dto);
-        if (optResepti.isPresent()) {
-            var reseptiDto = reseptiToDto(optResepti.get());
-            return new ValidateServiceResult<>(reseptiDto, vr);
+        try {
+            var optResepti = business.updateResepti(id, dto);
+            if (optResepti.isPresent()) {
+                var reseptiDto = reseptiToDto(optResepti.get());
+                return new ValidateServiceResult<>(reseptiDto, vr);
+            }
+        } catch (ReseptiError e) {
+            logger.logError(ValidationError.RE105);
+            vr.getErrorMsg().add(ValidationError.RE105);
+            return new ValidateServiceResult<>(null, vr);
         }
         logger.logError(ValidationError.RE105);
         return new ValidateServiceResult<>(null, vr);

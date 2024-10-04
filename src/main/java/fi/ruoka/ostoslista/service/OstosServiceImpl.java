@@ -15,7 +15,7 @@ import fi.ruoka.ostoslista.logging.OstosListaLogger;
 public class OstosServiceImpl implements OstosService {
 
     @Autowired
-    OstosBusiness business;
+    private OstosBusiness business;
 
     @Autowired
     private OstosValidator validator;
@@ -62,8 +62,26 @@ public class OstosServiceImpl implements OstosService {
         return new ValidateServiceResult<>(null, vr);
     }
 
+    @Override
+    public ValidateServiceResult<OstosDto> getOstosById(Long id) {
+        Optional<OstosEntity> optOstos = business.getOstosById(id);
+        var vr = new ValidationResult();
+        var errorMsg = new ArrayList<String>();
+
+        if (optOstos.isEmpty()) {
+            errorMsg.add(ValidationError.VE001 + ".ostosEntity");
+            vr.setErrorMsg(errorMsg);
+
+            logger.logValidationFailure(ValidationError.OE101 + vr.getErrorMsg());
+            return new ValidateServiceResult<>(null, vr);
+        }
+        vr.validated = true;
+        return new ValidateServiceResult<>(ostosToDto(optOstos.get()), vr);
+    }
+
     private OstosDto ostosToDto(OstosEntity entity) {
         OstosDto dto = new OstosDto();
+        dto.setId(entity.getId());
         dto.setMaara(entity.getMaara());
         dto.setTuote(entity.getTuote());
         dto.setYksikko(entity.getYksikko());

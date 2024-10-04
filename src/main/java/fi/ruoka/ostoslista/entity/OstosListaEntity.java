@@ -29,7 +29,6 @@ public class OstosListaEntity {
     @NotNull
     private Instant paiva;
 
-    @NotNull
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "ostosLista", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OstosEntity> ostokset;
 }

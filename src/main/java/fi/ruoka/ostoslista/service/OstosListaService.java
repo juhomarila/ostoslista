@@ -9,7 +9,7 @@ public interface OstosListaService {
 
     ValidateServiceResult<OstosListaDto> getOstosListaById(Long id);
 
-    ValidateServiceResult<OstosListaDto> updateOstosLista(OstosListaDto dto);
+    ValidateServiceResult<OstosListaDto> updateOstosLista(Long id, OstosListaDto dto);
 
     ValidateServiceResult<Boolean> deleteOstosLista(Long id);
 

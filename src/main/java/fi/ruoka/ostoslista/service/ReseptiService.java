@@ -16,5 +16,5 @@ public interface ReseptiService {
 
     ValidateServiceResult<Boolean> deleteResepti(Long id);
 
-    ValidateServiceResult<ReseptiDto> updateResepti(ReseptiDto dto);
+    ValidateServiceResult<ReseptiDto> updateResepti(Long id, ReseptiDto dto);
 }

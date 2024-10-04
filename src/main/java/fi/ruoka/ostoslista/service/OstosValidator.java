@@ -30,8 +30,5 @@ public class OstosValidator {
         if (dto.getYksikko() == null || dto.getYksikko().length() < 1) {
             errorMsg.add(ValidationError.VE001 + ".yksikko");
         }
-        if (dto.getOstosListaId() == null) {
-            errorMsg.add(ValidationError.VE001 + ".ostosListaId");
-        }
     }
 }
