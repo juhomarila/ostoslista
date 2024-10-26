@@ -10,6 +10,16 @@ jobs:
     
     steps:
     - uses: actions/checkout@v4
+    - name: login to docker hub
+      id: docker-hub
+      env:
+        username: ${{secrets.DOCKERHUB_USERNAME}}
+        password: ${{secrets.DOCKERHUB_PASSWORD}}
+      run: |
+        docker login -u $username -p $password 
     - name: Build the Docker image
-      run : docker build . --file Dockerfile --tag juhomarila/ostoslista-app:latest --push
+      run : docker build . --file Dockerfile --tag ${{secrets.DOCKERHUB_USERNAME}}/ostoslista-app:latest
       #run: docker build --platform linux/arm64 -t juhomarila/ostoslista-app:latest --push .
+    - name: push the docker image
+      id: push-docker-image
+      run: docker push ${{secrets.DOCKERHUB_USERNAME}}/ostoslista-app:latest
