@@ -4,7 +4,7 @@ WORKDIR /usr/src/app
 
 COPY .mvn/ .mvn
 COPY mvnw pom.xml ./
-RUN chmod +x mvnw && ./mvnw -B dependency:go-offline -ntp -q
+RUN dos2unix ./mvnw && ./mvnw dependency:go-offline
 
 COPY src ./src
 
