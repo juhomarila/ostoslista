@@ -11,4 +11,5 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - name: Build the Docker image
-      run: docker build --platform linux/arm64 -t juhomarila/ostoslista-app:latest --push .
+      run : docker build . --file Dockerfile --tag juhomarila/ostoslista-app:latest --push .
+      #run: docker build --platform linux/arm64 -t juhomarila/ostoslista-app:latest --push .
