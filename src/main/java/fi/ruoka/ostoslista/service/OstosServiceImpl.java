@@ -85,6 +85,7 @@ public class OstosServiceImpl implements OstosService {
         dto.setMaara(entity.getMaara());
         dto.setTuote(entity.getTuote());
         dto.setYksikko(entity.getYksikko());
+        dto.setOstettu(entity.getOstettu());
         dto.setOstosListaId(entity.getOstosLista().getId());
         return dto;
     }

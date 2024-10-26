@@ -143,6 +143,7 @@ public class OstosListaServiceImpl implements OstosListaService {
             ostosDto.setMaara(ostos.getMaara());
             ostosDto.setTuote(ostos.getTuote());
             ostosDto.setYksikko(ostos.getYksikko());
+            ostosDto.setOstettu(ostos.getOstettu());
             ostosDto.setOstosListaId(ostos.getOstosLista().getId());
             ostosDtosList.add(ostosDto);
         });
