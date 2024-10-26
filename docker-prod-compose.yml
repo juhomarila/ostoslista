@@ -1,0 +1,18 @@
+version: '3.8'
+services:
+  app:
+    container_name: ostoslista
+    image: juhomarila/ostoslista-app:latest
+    ports:
+      - 8080:8080
+  db:
+    image: postgres:17.0-alpine3.20
+    container_name: postgres_db
+    environment:
+      POSTGRES_DB: ostoslista_db
+      POSTGRES_USER: ostoslista_user
+      POSTGRES_PASSWORD: password123
+    ports:
+      - "5432:5432"
+volumes:
+  postgres_data:

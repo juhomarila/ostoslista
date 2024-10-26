@@ -1,10 +1,10 @@
 package fi.ruoka.ostoslista.business;
 
-import java.util.Optional;
+import java.time.Instant;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
-import java.time.Instant;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

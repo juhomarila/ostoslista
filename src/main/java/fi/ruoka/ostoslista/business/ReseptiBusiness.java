@@ -1,7 +1,7 @@
 package fi.ruoka.ostoslista.business;
 
-import java.util.Optional;
 import java.util.List;
+import java.util.Optional;
 
 import fi.ruoka.ostoslista.dto.ReseptiDto;
 import fi.ruoka.ostoslista.entity.ReseptiEntity;

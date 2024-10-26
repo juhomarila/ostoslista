@@ -1,7 +1,7 @@
 package fi.ruoka.ostoslista.entity;
 
-import java.util.List;
 import java.time.Instant;
+import java.util.List;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
