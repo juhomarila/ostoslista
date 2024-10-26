@@ -33,4 +33,6 @@ public class ReseptiEntity {
 
     @NotNull
     private Instant added;
+
+    private Integer ostoKerrat;
 }

@@ -10,14 +10,18 @@ services:
     volumes:
       - ./src:/usr/src/app/src
       - ./target:/usr/src/app/target
-      - ./data:/data 
+      - ./data:/data
+    environment:
+      db: ${db}
+      user: ${user}
+      pass: ${pass}
   db:
     image: postgres:17.0-alpine3.20
     container_name: postgres_db
     environment:
-      POSTGRES_DB: $DB
-      POSTGRES_USER: $USER
-      POSTGRES_PASSWORD: $PASS
+      POSTGRES_DB: ${db}
+      POSTGRES_USER: ${user}
+      POSTGRES_PASSWORD: ${pass}
     ports:
       - "5432:5432"
 volumes:

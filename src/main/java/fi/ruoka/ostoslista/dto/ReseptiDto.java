@@ -1,7 +1,7 @@
 package fi.ruoka.ostoslista.dto;
 
-import java.util.List;
 import java.time.Instant;
+import java.util.List;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,5 +17,6 @@ public class ReseptiDto {
     private List<RuokaAineDto> ruokaAineet;
     private String ohje;
     private String nimi;
+    private Integer ostoKerrat;
     private Instant added;
 }

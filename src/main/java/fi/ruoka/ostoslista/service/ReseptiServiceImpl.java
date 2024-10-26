@@ -138,6 +138,7 @@ public class ReseptiServiceImpl implements ReseptiService {
         reseptiDto.setOhje(resepti.getOhje());
         reseptiDto.setNimi(resepti.getNimi());
         reseptiDto.setAdded(resepti.getAdded());
+        reseptiDto.setOstoKerrat(resepti.getOstoKerrat());
         reseptiDto.setRuokaAineet(ruokaAineetToDto(resepti.getRuokaAineet()));
 
         return reseptiDto;

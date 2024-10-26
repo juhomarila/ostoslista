@@ -77,6 +77,7 @@ public class ReseptiBusinessImpl implements ReseptiBusiness {
                 });
                 reseptiEntity.setOhje(dto.getOhje());
                 reseptiEntity.setNimi(dto.getNimi());
+                reseptiEntity.setOstoKerrat(dto.getOstoKerrat());
                 ReseptiEntity savedReseptiEntity = reseptiRepository.save(reseptiEntity);
                 return Optional.of(savedReseptiEntity);
             }
@@ -112,6 +113,7 @@ public class ReseptiBusinessImpl implements ReseptiBusiness {
         resepti.setRuokaAineet(ruokaAineet);
         resepti.setAdded(Instant.now());
         resepti.setNimi(dto.getNimi());
+        resepti.setOstoKerrat(dto.getOstoKerrat());
         ruokaAineet.forEach(ruokaAine -> {
             ruokaAine.setResepti(resepti);
         });
