@@ -77,11 +77,13 @@ public class OstosListaBusinessImpl implements OstosListaBusiness {
                         ostos.setMaara(ostosDto.getMaara());
                         ostos.setTuote(ostosDto.getTuote());
                         ostos.setYksikko(ostosDto.getYksikko());
+                        ostos.setOstettu(ostosDto.getOstettu());
                     } else {
                         OstosEntity ostos = new OstosEntity();
                         ostos.setMaara(ostosDto.getMaara());
                         ostos.setTuote(ostosDto.getTuote());
                         ostos.setYksikko(ostosDto.getYksikko());
+                        ostos.setOstettu(ostosDto.getOstettu());
                         ostos.setOstosLista(ostosListaEntity);
                         ostosListaEntity.getOstokset().add(ostos);
                     }
@@ -128,6 +130,7 @@ public class OstosListaBusinessImpl implements OstosListaBusiness {
         entity.setMaara(ostosDto.getMaara());
         entity.setTuote(ostosDto.getTuote());
         entity.setYksikko(ostosDto.getYksikko());
+        entity.setOstettu(ostosDto.getOstettu());
         return entity;
     }
 

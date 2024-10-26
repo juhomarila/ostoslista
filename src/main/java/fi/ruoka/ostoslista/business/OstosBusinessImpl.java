@@ -61,6 +61,7 @@ public class OstosBusinessImpl implements OstosBusiness {
                 ostos.setTuote(dto.getTuote());
                 ostos.setYksikko(dto.getYksikko());
                 ostos.setOstosLista(ostosListaEntity);
+                ostos.setOstettu(dto.getOstettu());
                 ostosRepository.save(ostos);
                 return Optional.of(ostos);
             }

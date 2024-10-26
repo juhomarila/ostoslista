@@ -15,4 +15,5 @@ public class OstosDto {
     private Long maara;
     private String yksikko;
     private Long ostosListaId;
+    private Boolean ostettu;
 }

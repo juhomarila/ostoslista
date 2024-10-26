@@ -31,4 +31,6 @@ public class OstosEntity {
     @ManyToOne
     @JoinColumn(name = "OstosListaEntity_id")
     private OstosListaEntity ostosLista;
+
+    private Boolean ostettu;
 }
