@@ -11,4 +11,6 @@ public interface OstosBusiness {
     Optional<OstosEntity> addOstos(Long id, OstosDto dto);
 
     Optional<OstosEntity> getOstosById(Long id);
+
+    Optional<OstosEntity> updateOstosById(Long id, OstosDto dto);
 }

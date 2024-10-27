@@ -8,4 +8,6 @@ public interface OstosService {
     ValidateServiceResult<OstosDto> addOstos(Long id, OstosDto dto);
 
     ValidateServiceResult<OstosDto> getOstosById(Long id);
+
+    ValidateServiceResult<OstosDto> updateOstosById(Long id, OstosDto dto);
 }

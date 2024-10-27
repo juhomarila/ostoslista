@@ -23,7 +23,6 @@ services:
     volumes:
       - ./src:/usr/src/app/src
       - ./target:/usr/src/app/target
-      - ./data:/data
     environment:
       db: ${db}
       user: ${user}

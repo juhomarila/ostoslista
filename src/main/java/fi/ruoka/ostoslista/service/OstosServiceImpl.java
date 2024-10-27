@@ -79,6 +79,21 @@ public class OstosServiceImpl implements OstosService {
         return new ValidateServiceResult<>(ostosToDto(optOstos.get()), vr);
     }
 
+    @Override
+    public ValidateServiceResult<OstosDto> updateOstosById(Long id, OstosDto dto) {
+        var vr = validator.validate(dto);
+        if (!vr.validated) {
+            logger.logValidationFailure(ValidationError.OE102 + vr.getErrorMsg());
+            return new ValidateServiceResult<>(null, vr);
+        }
+        Optional<OstosEntity> optOstos = business.updateOstosById(id, dto);
+        if (optOstos.isPresent()) {
+            return new ValidateServiceResult<>(ostosToDto(optOstos.get()), vr);
+        }
+        logger.logError(ValidationError.OE103);
+        return new ValidateServiceResult<>(null, vr);
+    }
+
     private OstosDto ostosToDto(OstosEntity entity) {
         OstosDto dto = new OstosDto();
         dto.setId(entity.getId());

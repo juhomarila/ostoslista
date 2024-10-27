@@ -77,4 +77,25 @@ public class OstosBusinessImpl implements OstosBusiness {
     public Optional<OstosEntity> getOstosById(Long id) {
         return ostosRepository.findById(id);
     }
+
+    @Override
+    public Optional<OstosEntity> updateOstosById(Long id, OstosDto dto) {
+        try {
+            Optional<OstosEntity> optOstos = ostosRepository.findById(id);
+            if (optOstos.isPresent()) {
+                OstosEntity ostos = optOstos.get();
+                ostos.setMaara(dto.getMaara());
+                ostos.setTuote(dto.getTuote());
+                ostos.setYksikko(dto.getYksikko());
+                ostos.setOstettu(dto.getOstettu());
+                ostosRepository.save(ostos);
+                return Optional.of(ostos);
+            }
+        } catch (Exception e) {
+            logger.error(ErrorMessages.OSTOS_UPDATE_ERROR + e.getMessage(), e);
+            e.printStackTrace();
+            return Optional.empty();
+        }
+        return Optional.empty();
+    }
 }

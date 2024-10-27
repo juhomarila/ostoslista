@@ -1,18 +1,27 @@
 version: '3.8'
 services:
-  app:
-    container_name: ostoslista
-    image: juhomarila/ostoslista-app:latest
-    ports:
-      - 8080:8080
   db:
     image: postgres:17.0-alpine3.20
     container_name: postgres_db
+    env_file: ".env"
     environment:
-      POSTGRES_DB: ostoslista_db
-      POSTGRES_USER: ostoslista_user
-      POSTGRES_PASSWORD: password123
+      POSTGRES_DB: ${db}
+      POSTGRES_USER: ${user}
+      POSTGRES_PASSWORD: ${pass}
     ports:
       - "5432:5432"
-volumes:
-  postgres_data:
+    volumes:
+      - ./data:/var/lib/postgresql/data
+  app:
+    depends_on: 
+      - db
+    image: juhomarila/ostoslista-app:latest
+    container_name: ostoslista
+    ports:
+      - 8080:8080
+    env_file: ".env"
+    environment:
+      db: ${db}
+      user: ${user}
+      pass: ${pass}
+

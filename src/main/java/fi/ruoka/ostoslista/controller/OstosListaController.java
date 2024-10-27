@@ -116,4 +116,14 @@ public class OstosListaController {
                                                 vsr.getVr().validated ? HttpStatus.BAD_REQUEST : HttpStatus.NOT_FOUND);
         }
 
+        @PutMapping("/ostos/{id}")
+        public ResponseEntity<?> updateOstosById(@PathVariable Long id, @RequestBody OstosDto dto) {
+                logger.getLogStart("updateOstosById");
+                var vsr = ostosService.updateOstosById(id, dto);
+                logger.getLogEnd("updateOstosById");
+                return vsr.getVr().validated ? new ResponseEntity<>(vsr.getT(), HttpStatus.OK)
+                                : new ResponseEntity<>(vsr.getVr().getErrorMsg(),
+                                                vsr.getVr().validated ? HttpStatus.BAD_REQUEST : HttpStatus.NOT_FOUND);
+        }
+
 }
