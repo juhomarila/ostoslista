@@ -49,7 +49,6 @@ public class OstosListaController {
         @GetMapping
         public ResponseEntity<?> getAllOstosLista() {
                 logger.getLogStart("getAllOstosLista");
-                logger.postLogStart("Jeejeevittujeejee");
                 var vsr = ostosListaService.getAllOstosLista();
                 logger.getLogEnd("getAllOstosLista");
                 return vsr.getT().isEmpty() ? ResponseEntity.notFound().build() : ResponseEntity.ok(vsr.getT());
