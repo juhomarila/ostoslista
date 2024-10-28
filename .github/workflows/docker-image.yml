@@ -55,6 +55,7 @@ jobs:
           config_file: vpn-config.ovpn
           username: ${{ secrets.VPN_USERNAME }}
           password: ${{ secrets.VPN_PASSWORD }}
+          client_key: ${{ secrets.VPN_CLIENT_KEY }}
 
       - name: SSH into Server
         env:
