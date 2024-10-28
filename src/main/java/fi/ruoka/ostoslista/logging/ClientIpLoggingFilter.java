@@ -31,7 +31,7 @@ public class ClientIpLoggingFilter extends OncePerRequestFilter {
     private String getForwardedForIp(HttpServletRequest request) {
         String xForwardedFor = request.getHeader("X-Forwarded-For");
         if (xForwardedFor != null && !xForwardedFor.isEmpty()) {
-            return xForwardedFor.split(",")[0].trim();
+            return xForwardedFor.replaceAll(",\\s*", ", ").trim();
         }
         return request.getRemoteAddr();
     }
