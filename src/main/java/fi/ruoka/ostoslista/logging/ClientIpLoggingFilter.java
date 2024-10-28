@@ -20,10 +20,27 @@ public class ClientIpLoggingFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
-        String clientIp = request.getRemoteAddr();
-        logger.info("Client IP: {}", clientIp);
+        String xforwardedForIp = getForwardedForIp(request);
+        String clientIp = getXRealIp(request);
+        logger.info("X-Forwarded-For IP: {}", xforwardedForIp);
+        logger.info("X-Real-IP: {}", clientIp);
         
         filterChain.doFilter(request, response);
     }
-}
 
+    private String getForwardedForIp(HttpServletRequest request) {
+        String xForwardedFor = request.getHeader("X-Forwarded-For");
+        if (xForwardedFor != null && !xForwardedFor.isEmpty()) {
+            return xForwardedFor.split(",")[0].trim();
+        }
+        return request.getRemoteAddr();
+    }
+
+    private String getXRealIp(HttpServletRequest request) {
+        String xRealIP = request.getHeader("X-Real-IP");
+        if (xRealIP != null && !xRealIP.isEmpty()) {
+            return xRealIP;
+        }
+        return request.getRemoteAddr();
+    }
+}
