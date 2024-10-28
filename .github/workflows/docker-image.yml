@@ -52,7 +52,7 @@ jobs:
       - name: Setup VPN Connection
         uses: "kota65535/github-openvpn-connect-action@v2"
         with:
-          config_file: .github/workflows/KotiVPN.ovpn
+          config_file: vpn-config.ovpn
           username: ${{ secrets.VPN_USERNAME }}
           password: ${{ secrets.VPN_PASSWORD }}
 
