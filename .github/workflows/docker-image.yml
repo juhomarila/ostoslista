@@ -42,25 +42,16 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Install OpenVPN
-        run: sudo apt-get update && sudo apt-get install -y openvpn
+        run: |
+          sudo apt update
+          sudo apt install -y openvpn openvpn-systemd-resolved
 
       - name: Setup VPN Connection
-        env:
-          VPN_USERNAME: ${{ secrets.VPN_USERNAME }}
-          VPN_PASSWORD: ${{ secrets.VPN_PASSWORD }}
-        run: |
-          # Save the VPN config file from a secret
-          echo "${{ secrets.VPN_CONFIG }}" > vpn-config.ovpn
-          
-          # Write username and password to a temp file
-          echo -e "$VPN_USERNAME\n$VPN_PASSWORD" > vpn-auth.txt
-          chmod 600 vpn-auth.txt
-          chmod 600 vpn-config.ovpn
-
-          cat vpn-auth.txt
-          
-          # Establish the VPN connection
-          sudo openvpn --config vpn-config.ovpn --auth-user-pass vpn-auth.txt && sleep 25
+        uses: "kota65535/github-openvpn-connect-action@v2"
+        with:
+          username: ${{ secrets.VPN_USERNAME }}
+          password: ${{ secrets.VPN_PASSWORD }}
+          config_file: ${{ secrets.VPN_CONFIG }}
 
       - name: SSH into Server
         env:
@@ -71,6 +62,3 @@ jobs:
           chmod 600 ~/.ssh/id_rsa
           
           ssh -o StrictHostKeyChecking=no -p ${{ secrets.SSH_PORT }} ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "echo 'Connected via VPN!'"
-      - name: Clean Up
-        run: |
-          rm vpn-config.ovpn vpn-auth.txt ~/.ssh/id_rsa
