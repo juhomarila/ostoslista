@@ -48,13 +48,14 @@ jobs:
         env:
           VPN_USERNAME: ${{ secrets.VPN_USERNAME }}
           VPN_PASSWORD: ${{ secrets.VPN_PASSWORD }}
+          VPN_CONFIG: ${{ secrets.VPN_CONFIG }}
         run: |
           # Save the VPN config file if it's provided as a secret
-          echo "$secrets.VPN_CONFIG" > vpn-config.ovpn
+          echo "$VPN_CONFIG" > vpn-config.ovpn
           
           # Use OpenVPN with the configuration and credentials
           sudo openvpn --config vpn-config.ovpn --auth-user-pass <(echo -e "$VPN_USERNAME\n$VPN_PASSWORD") &
-          sleep 10 # Allow some time to establish the VPN connection
+          sleep 25 # Allow some time to establish the VPN connection
 
       - name: SSH into Server
         env:
