@@ -53,14 +53,15 @@ jobs:
           echo "$OVPN" > .github/vpn.ovpn
       - name: Install Open VPN
         run: |
-          sudo apt-get install apt-transport-https
-          sudo apt-get install libjsoncpp1
-          sudo apt-get install libtinyxml2-6
+          sudo apt install apt-transport-https
+          sudo mkdir -p /etc/apt/keyrings && curl -fsSL https://packages.openvpn.net/packages-repo.gpg | sudo tee /etc/apt/keyrings/openvpn.asc
+          DISTRO=$(lsb_release -c -s)
+          echo "deb [signed-by=/etc/apt/keyrings/openvpn.asc] https://packages.openvpn.net/openvpn3/debian $DISTRO main" | sudo tee /etc/apt/sources.list.d/openvpn-packages.list
           sudo wget https://swupdate.openvpn.net/repos/openvpn-repo-pkg-key.pub
           sudo apt-key add openvpn-repo-pkg-key.pub
           sudo wget -O /etc/apt/sources.list.d/openvpn3.list https://swupdate.openvpn.net/community/openvpn3/repos/openvpn3-bionic.list
-          sudo apt-get update
-          sudo apt-get install openvpn3
+          sudo apt update
+          sudo apt install openvpn3
 
       - name: Start Open VPN 3
         run: |
