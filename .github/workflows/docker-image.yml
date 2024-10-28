@@ -50,8 +50,7 @@ jobs:
           VPN_PASSWORD: ${{ secrets.VPN_PASSWORD }}
         run: |
           # Save the VPN config file if it's provided as a secret
-          echo "${{ secrets.VPN_CONFIG }}" > vpn-config.ovpn
-          cat vpn-config.ovpn
+          echo "$secrets.VPN_CONFIG" > vpn-config.ovpn
           
           # Use OpenVPN with the configuration and credentials
           sudo openvpn --config vpn-config.ovpn --auth-user-pass <(echo -e "$VPN_USERNAME\n$VPN_PASSWORD") &
