@@ -65,7 +65,7 @@ jobs:
 
       - name: Start Open VPN 3
         run: |
-          { echo $VPN_USERNAME ; echo $VPN_SECRET ; } | openvpn3 session-start --config .github/vpn.ovpn
+          { echo $VPN_SECRET ; } | openvpn3 session-start --config .github/vpn.ovpn
 
       - name: SSH into Server
         env:
