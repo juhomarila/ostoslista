@@ -56,12 +56,14 @@ jobs:
           echo -e "$VPN_USERNAME\n$VPN_PASSWORD" > vpn-auth.txt
           chmod 600 vpn-auth.txt
           chmod 600 vpn-config.ovpn
+
+          cat vpn-auth.txt
           
           # Establish the VPN connection
-          sudo openvpn --config vpn-config.ovpn --auth-user-pass vpn-auth.txt
+          sudo openvpn --config vpn-config.ovpn --auth-user-pass vpn-auth.txt &
           
           # Give it time to establish
-          sleep 10
+          sleep 25
 
       - name: SSH into Server
         env:
