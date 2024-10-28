@@ -60,10 +60,7 @@ jobs:
           cat vpn-auth.txt
           
           # Establish the VPN connection
-          sudo openvpn --config vpn-config.ovpn --auth-user-pass vpn-auth.txt &
-          
-          # Give it time to establish
-          sleep 25
+          sudo openvpn --config vpn-config.ovpn --auth-user-pass vpn-auth.txt && sleep 25
 
       - name: SSH into Server
         env:
