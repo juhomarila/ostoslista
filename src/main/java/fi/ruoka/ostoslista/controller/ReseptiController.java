@@ -1,22 +1,24 @@
 package fi.ruoka.ostoslista.controller;
 
-import fi.ruoka.ostoslista.dto.ReseptiDto;
-import fi.ruoka.ostoslista.logging.OstosListaLogger;
-import fi.ruoka.ostoslista.service.ReseptiService;
-import jakarta.annotation.security.PermitAll;
-
 import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RestController;
+
+import fi.ruoka.ostoslista.dto.ReseptiDto;
+import fi.ruoka.ostoslista.logging.OstosListaLogger;
+import fi.ruoka.ostoslista.service.ReseptiService;
+import jakarta.annotation.security.PermitAll;
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/reseptit")
@@ -33,7 +35,7 @@ public class ReseptiController {
     }
 
     @PostMapping
-    public ResponseEntity<?> createResepti(@RequestBody ReseptiDto dto) {
+    public ResponseEntity<?> createResepti(@Valid @RequestBody ReseptiDto dto) {
         logger.postLogStart("createResepti");
         var vsr = reseptiService.createResepti(dto);
         logger.postLogEnd("createResepti");
@@ -72,7 +74,7 @@ public class ReseptiController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateResepti(@PathVariable Long id, @RequestBody ReseptiDto dto) {
+    public ResponseEntity<?> updateResepti(@PathVariable Long id, @Valid @RequestBody ReseptiDto dto) {
         logger.putLogStart("updateResepti");
         var vsr = reseptiService.updateResepti(id, dto);
         logger.putLogEnd("updateResepti");

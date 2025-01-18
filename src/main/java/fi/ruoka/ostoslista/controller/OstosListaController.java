@@ -17,6 +17,7 @@ import fi.ruoka.ostoslista.dto.OstosListaDto;
 import fi.ruoka.ostoslista.logging.OstosListaLogger;
 import fi.ruoka.ostoslista.service.OstosListaService;
 import fi.ruoka.ostoslista.service.OstosService;
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/ostoslista")
@@ -36,7 +37,7 @@ public class OstosListaController {
         }
 
         @PostMapping
-        public ResponseEntity<?> createOstosLista(@RequestBody OstosListaDto dto) {
+        public ResponseEntity<?> createOstosLista(@Valid @RequestBody OstosListaDto dto) {
                 logger.postLogStart("createOstosLista");
                 var vsr = ostosListaService.createOstosLista(dto);
                 logger.postLogEnd("createOstosLista");
@@ -65,7 +66,7 @@ public class OstosListaController {
         }
 
         @PutMapping("/{id}")
-        public ResponseEntity<?> updateOstosLista(@PathVariable Long id, @RequestBody OstosListaDto dto) {
+        public ResponseEntity<?> updateOstosLista(@PathVariable Long id, @Valid @RequestBody OstosListaDto dto) {
                 logger.putLogStart("updateOstosLista");
                 var vsr = ostosListaService.updateOstosLista(id, dto);
                 logger.putLogEnd("updateOstosLista");
@@ -96,7 +97,7 @@ public class OstosListaController {
         }
 
         @PostMapping("/ostos/{id}")
-        public ResponseEntity<?> addOstos(@PathVariable Long id, @RequestBody OstosDto dto) {
+        public ResponseEntity<?> addOstos(@PathVariable Long id, @Valid @RequestBody OstosDto dto) {
                 logger.postLogStart("addOstos");
                 var vsr = ostosService.addOstos(id, dto);
                 logger.postLogEnd("addOstos");
@@ -117,7 +118,7 @@ public class OstosListaController {
         }
 
         @PutMapping("/ostos/{id}")
-        public ResponseEntity<?> updateOstosById(@PathVariable Long id, @RequestBody OstosDto dto) {
+        public ResponseEntity<?> updateOstosById(@PathVariable Long id, @Valid @RequestBody OstosDto dto) {
                 logger.getLogStart("updateOstosById");
                 var vsr = ostosService.updateOstosById(id, dto);
                 logger.getLogEnd("updateOstosById");
