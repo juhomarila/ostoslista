@@ -1,6 +1,7 @@
 package fi.ruoka.ostoslista.business;
 
 import java.time.Instant;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
@@ -15,6 +16,7 @@ import fi.ruoka.ostoslista.dto.OstosDto;
 import fi.ruoka.ostoslista.dto.OstosListaDto;
 import fi.ruoka.ostoslista.entity.OstosEntity;
 import fi.ruoka.ostoslista.entity.OstosListaEntity;
+import fi.ruoka.ostoslista.enums.Tuotteet;
 import fi.ruoka.ostoslista.repository.OstosListaRepository;
 import fi.ruoka.ostoslista.repository.OstosRepository;
 
@@ -78,6 +80,11 @@ public class OstosListaBusinessImpl implements OstosListaBusiness {
                         ostos.setTuote(ostosDto.getTuote());
                         ostos.setYksikko(ostosDto.getYksikko());
                         ostos.setOstettu(ostosDto.getOstettu());
+                        Tuotteet matchingTuote = Arrays.stream(Tuotteet.values())
+                                .filter(t -> t.getTuote().contains(ostosDto.getTuote()))
+                                .findFirst()
+                                .orElse(null);
+                        ostos.setOsastoId(matchingTuote != null ? matchingTuote.getOsastoId() : 0);
                     } else {
                         OstosEntity ostos = new OstosEntity();
                         ostos.setMaara(ostosDto.getMaara());
@@ -85,6 +92,11 @@ public class OstosListaBusinessImpl implements OstosListaBusiness {
                         ostos.setYksikko(ostosDto.getYksikko());
                         ostos.setOstettu(ostosDto.getOstettu());
                         ostos.setOstosLista(ostosListaEntity);
+                        Tuotteet matchingTuote = Arrays.stream(Tuotteet.values())
+                                .filter(t -> t.getTuote().contains(ostosDto.getTuote()))
+                                .findFirst()
+                                .orElse(null);
+                        ostos.setOsastoId(matchingTuote != null ? matchingTuote.getOsastoId() : 0);
                         ostosListaEntity.getOstokset().add(ostos);
                     }
                 });
@@ -131,7 +143,11 @@ public class OstosListaBusinessImpl implements OstosListaBusiness {
         entity.setTuote(ostosDto.getTuote());
         entity.setYksikko(ostosDto.getYksikko());
         entity.setOstettu(ostosDto.getOstettu());
+        Tuotteet matchingTuote = Arrays.stream(Tuotteet.values())
+                .filter(t -> t.getTuote().contains(ostosDto.getTuote()))
+                .findFirst()
+                .orElse(null);
+        entity.setOsastoId(matchingTuote != null ? matchingTuote.getOsastoId() : 0);
         return entity;
     }
-
 }

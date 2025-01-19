@@ -1,5 +1,6 @@
 package fi.ruoka.ostoslista.business;
 
+import java.util.Arrays;
 import java.util.Optional;
 
 import org.slf4j.Logger;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Service;
 import fi.ruoka.ostoslista.dto.OstosDto;
 import fi.ruoka.ostoslista.entity.OstosEntity;
 import fi.ruoka.ostoslista.entity.OstosListaEntity;
+import fi.ruoka.ostoslista.enums.Tuotteet;
 import fi.ruoka.ostoslista.repository.OstosListaRepository;
 import fi.ruoka.ostoslista.repository.OstosRepository;
 
@@ -62,6 +64,11 @@ public class OstosBusinessImpl implements OstosBusiness {
                 ostos.setYksikko(dto.getYksikko());
                 ostos.setOstosLista(ostosListaEntity);
                 ostos.setOstettu(dto.getOstettu());
+                Tuotteet matchingTuote = Arrays.stream(Tuotteet.values())
+                        .filter(t -> t.getTuote().contains(dto.getTuote()))
+                        .findFirst()
+                        .orElse(null);
+                ostos.setOsastoId(matchingTuote != null ? matchingTuote.getOsastoId() : 0);
                 ostosRepository.save(ostos);
                 return Optional.of(ostos);
             }
@@ -88,6 +95,11 @@ public class OstosBusinessImpl implements OstosBusiness {
                 ostos.setTuote(dto.getTuote());
                 ostos.setYksikko(dto.getYksikko());
                 ostos.setOstettu(dto.getOstettu());
+                Tuotteet matchingTuote = Arrays.stream(Tuotteet.values())
+                        .filter(t -> t.getTuote().contains(dto.getTuote()))
+                        .findFirst()
+                        .orElse(null);
+                ostos.setOsastoId(matchingTuote != null ? matchingTuote.getOsastoId() : 0);
                 ostosRepository.save(ostos);
                 return Optional.of(ostos);
             }

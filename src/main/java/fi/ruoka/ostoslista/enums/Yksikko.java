@@ -1,19 +1,24 @@
 package fi.ruoka.ostoslista.enums;
 
 public enum Yksikko {
-    KILOGRAMMA("kg"),
-    GRAMMA("g"),
     LITRA("l"),
     DESILITRA("dl"),
     SENTTILITRA("cl"),
     MILLILITRA("ml"),
+    TEELUSIKKA("tl"),
+    RUOKALUSIKKA("rkl"),
+    KILOGRAMMA("kg"),
+    GRAMMA("g"),
     KAPPALE("kpl"),
     ISO_KAPPALE("iso kpl"),
-    RUOKALUSIKKA("rkl"),
-    TEELUSIKKA("tl"),
+    PUSSI("pussi"),
+    RASIA("rasia"),
+    PAKETTI("paketti"),
+    PURKKI("purkki"),
     RIPAUS("ripaus"),
     RUUKKU("ruukku"),
-    PURKKI("purkki");
+    PULLO("pullo"),
+    LAATIKKO("laatikko");
 
     private final String yksikko;
 
@@ -23,5 +28,16 @@ public enum Yksikko {
 
     public String getYksikko() {
         return yksikko;
+    }
+
+    public static String getPattern() {
+        StringBuilder pattern = new StringBuilder();
+        for (Yksikko yksikko : values()) {
+            if (pattern.length() > 0) {
+                pattern.append("|");
+            }
+            pattern.append(yksikko.getYksikko());
+        }
+        return pattern.toString();
     }
 }

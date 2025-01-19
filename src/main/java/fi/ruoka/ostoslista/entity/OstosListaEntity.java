@@ -10,6 +10,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OrderBy;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
@@ -30,5 +31,6 @@ public class OstosListaEntity {
     private Instant paiva;
 
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "ostosLista", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OrderBy("osastoId ASC")
     private List<OstosEntity> ostokset;
 }

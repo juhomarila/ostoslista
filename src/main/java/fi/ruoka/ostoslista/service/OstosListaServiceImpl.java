@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -11,8 +12,10 @@ import org.springframework.stereotype.Service;
 import fi.ruoka.ostoslista.business.OstosListaBusiness;
 import fi.ruoka.ostoslista.dto.OstosDto;
 import fi.ruoka.ostoslista.dto.OstosListaDto;
+import fi.ruoka.ostoslista.dto.ReseptiDto;
 import fi.ruoka.ostoslista.entity.OstosEntity;
 import fi.ruoka.ostoslista.entity.OstosListaEntity;
+import fi.ruoka.ostoslista.enums.Tuotteet;
 import fi.ruoka.ostoslista.logging.OstosListaLogger;
 
 @Service
@@ -45,6 +48,24 @@ public class OstosListaServiceImpl implements OstosListaService {
         }
         logger.logError(ValidationError.OLE104);
         return new ValidateServiceResult<>(null, vr);
+    }
+
+    @Override
+    public ValidateServiceResult<OstosListaDto> reseptiToOstosLista(ReseptiDto dto) {
+        OstosListaDto ostosListaDto = new OstosListaDto();
+        ostosListaDto.setNimi("Ostoslista");
+        List<OstosDto> ostokset = dto.getRuokaAineet().stream()
+                .map(ra -> {
+                    OstosDto ostos = new OstosDto();
+                    ostos.setMaara(ra.getMaara());
+                    ostos.setTuote(ra.getRuokaAine());
+                    ostos.setYksikko(ra.getYksikko());
+                    ostos.setOstettu(false);
+                    return ostos;
+                })
+                .collect(Collectors.toList());
+        ostosListaDto.setOstokset(ostokset);
+        return createOstosLista(ostosListaDto);
     }
 
     @Override
@@ -144,10 +165,10 @@ public class OstosListaServiceImpl implements OstosListaService {
             ostosDto.setTuote(ostos.getTuote());
             ostosDto.setYksikko(ostos.getYksikko());
             ostosDto.setOstettu(ostos.getOstettu());
+            ostosDto.setOsastoId(ostos.getOsastoId());
             ostosDto.setOstosListaId(ostos.getOstosLista().getId());
             ostosDtosList.add(ostosDto);
         });
         return ostosDtosList;
     }
-
 }

@@ -10,4 +10,7 @@ public class ErrorMessages {
     public static final String OSTOS_SAVE_ERROR = "Failed to save ostos to the database ";
     public static final String OSTOS_UPDATE_ERROR = "Failed to update ostos to the database ";
     public static final String OSTOS_DELETION_ERROR = "Failed to delete ostos ";
+    public static final String TUOTE_SAVE_ERROR = "Failed to save tuote to the database ";
+    public static final String TUOTE_UPDATE_ERROR = "Failed to update tuote to the database ";
+    public static final String TUOTE_DELETION_ERROR = "Failed to delete tuote ";
 }

@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import fi.ruoka.ostoslista.dto.OstosDto;
 import fi.ruoka.ostoslista.dto.OstosListaDto;
+import fi.ruoka.ostoslista.dto.ReseptiDto;
 import fi.ruoka.ostoslista.logging.OstosListaLogger;
 import fi.ruoka.ostoslista.service.OstosListaService;
 import fi.ruoka.ostoslista.service.OstosService;
@@ -41,6 +42,17 @@ public class OstosListaController {
                 logger.postLogStart("createOstosLista");
                 var vsr = ostosListaService.createOstosLista(dto);
                 logger.postLogEnd("createOstosLista");
+                return vsr.getVr().validated ? new ResponseEntity<>(vsr.getT(), HttpStatus.OK)
+                                : new ResponseEntity<>(vsr.getVr().getErrorMsg(),
+                                                vsr.getVr().validated ? HttpStatus.BAD_REQUEST
+                                                                : HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+        @PostMapping("/resepti")
+        public ResponseEntity<?> reseptiToOstosLista(@Valid @RequestBody ReseptiDto dto) {
+                logger.postLogStart("reseptiToOstosLista");
+                var vsr = ostosListaService.reseptiToOstosLista(dto);
+                logger.postLogEnd("reseptiToOstosLista");
                 return vsr.getVr().validated ? new ResponseEntity<>(vsr.getT(), HttpStatus.OK)
                                 : new ResponseEntity<>(vsr.getVr().getErrorMsg(),
                                                 vsr.getVr().validated ? HttpStatus.BAD_REQUEST

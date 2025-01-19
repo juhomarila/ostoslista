@@ -3,6 +3,7 @@ package fi.ruoka.ostoslista.service;
 import java.util.List;
 
 import fi.ruoka.ostoslista.dto.OstosListaDto;
+import fi.ruoka.ostoslista.dto.ReseptiDto;
 
 public interface OstosListaService {
     ValidateServiceResult<OstosListaDto> createOstosLista(OstosListaDto dto);
@@ -14,4 +15,6 @@ public interface OstosListaService {
     ValidateServiceResult<Boolean> deleteOstosLista(Long id);
 
     ValidateServiceResult<List<OstosListaDto>> getAllOstosLista();
+
+    ValidateServiceResult<OstosListaDto> reseptiToOstosLista(ReseptiDto dto);
 }

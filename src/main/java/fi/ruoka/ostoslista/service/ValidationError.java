@@ -29,5 +29,10 @@ public class ValidationError {
     public static final String OE104 = "OE104: ostos save error ";
     public static final String OE105 = "OE105: ostos update error ";
     public static final String OE106 = "OE106: ostos delete error ";
-
+    public static final String TE101 = "TE101: tuote not found ";
+    public static final String TE102 = "TE102: tuote data validation failed ";
+    public static final String TE103 = "TE103: corrupt tuote data ";
+    public static final String TE104 = "TE104: tuote save error ";
+    public static final String TE105 = "TE105: tuote update error ";
+    public static final String TE106 = "TE106: tuote delete error ";
 }

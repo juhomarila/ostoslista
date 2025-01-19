@@ -3,6 +3,7 @@ services:
   db:
     image: postgres:17.0-alpine3.20
     container_name: postgres_db
+    env_file: ".env"
     environment:
       POSTGRES_DB: ${db}
       POSTGRES_USER: ${user}
@@ -23,6 +24,7 @@ services:
     volumes:
       - ./src:/usr/src/app/src
       - ./target:/usr/src/app/target
+    env_file: ".env"
     environment:
       db: ${db}
       user: ${user}
