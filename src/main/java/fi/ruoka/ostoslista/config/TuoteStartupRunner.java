@@ -20,16 +20,13 @@ public class TuoteStartupRunner implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        // Check if the database is already populated
         if (tuoteRepository.count() > 0) {
-            return; // Skip if there are already records
+            return;
         }
-
-        // Populate the database with enum values
         for (Tuotteet tuote : Tuotteet.values()) {
-            if (!tuoteRepository.existsByTuote(tuote.name())) {
+            if (!tuoteRepository.existsByTuote(tuote.getTuote())) {
                 TuoteEntity entity = new TuoteEntity();
-                entity.setTuote(tuote.name());
+                entity.setTuote(tuote.getTuote());
                 entity.setOsasto(tuote.getOsastoId());
                 tuoteRepository.save(entity);
             }

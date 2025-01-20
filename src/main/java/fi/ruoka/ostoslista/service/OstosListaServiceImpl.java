@@ -15,7 +15,6 @@ import fi.ruoka.ostoslista.dto.OstosListaDto;
 import fi.ruoka.ostoslista.dto.ReseptiDto;
 import fi.ruoka.ostoslista.entity.OstosEntity;
 import fi.ruoka.ostoslista.entity.OstosListaEntity;
-import fi.ruoka.ostoslista.enums.Tuotteet;
 import fi.ruoka.ostoslista.logging.OstosListaLogger;
 
 @Service
@@ -66,6 +65,32 @@ public class OstosListaServiceImpl implements OstosListaService {
                 .collect(Collectors.toList());
         ostosListaDto.setOstokset(ostokset);
         return createOstosLista(ostosListaDto);
+    }
+
+    @Override
+    public ValidateServiceResult<OstosListaDto> reseptiToExistingOstosLista(ReseptiDto dto, Long id) {
+        OstosListaDto ostosListaDto = new OstosListaDto();
+        Optional<OstosListaEntity> ostosListaEntity = business.getOstosListaById(id);
+        if (ostosListaEntity.isEmpty()) {
+            logger.logError(ValidationError.OLE101);
+            return new ValidateServiceResult<>(null, new ValidationResult());
+        }
+        OstosListaEntity entity = ostosListaEntity.get();
+        ostosListaDto.setNimi(entity.getNimi());
+        List<OstosDto> ostokset = dto.getRuokaAineet().stream()
+                .map(ra -> {
+                    OstosDto ostos = new OstosDto();
+                    ostos.setMaara(ra.getMaara());
+                    ostos.setTuote(ra.getRuokaAine());
+                    ostos.setYksikko(ra.getYksikko());
+                    ostos.setOstettu(false);
+                    return ostos;
+                })
+                .collect(Collectors.toList());
+        ostokset.addAll(ostosToDto(entity.getOstokset()));
+        ostosListaDto.setOstokset(ostokset);
+        ostosListaDto.setId(id);
+        return updateOstosLista(id, ostosListaDto);
     }
 
     @Override
@@ -158,17 +183,19 @@ public class OstosListaServiceImpl implements OstosListaService {
 
     private List<OstosDto> ostosToDto(List<OstosEntity> ostokset) {
         List<OstosDto> ostosDtosList = new ArrayList<>();
-        ostokset.forEach(ostos -> {
-            OstosDto ostosDto = new OstosDto();
-            ostosDto.setId(ostos.getId());
-            ostosDto.setMaara(ostos.getMaara());
-            ostosDto.setTuote(ostos.getTuote());
-            ostosDto.setYksikko(ostos.getYksikko());
-            ostosDto.setOstettu(ostos.getOstettu());
-            ostosDto.setOsastoId(ostos.getOsastoId());
-            ostosDto.setOstosListaId(ostos.getOstosLista().getId());
-            ostosDtosList.add(ostosDto);
-        });
+        if (ostokset != null) {
+            ostokset.forEach(ostos -> {
+                OstosDto ostosDto = new OstosDto();
+                ostosDto.setId(ostos.getId());
+                ostosDto.setMaara(ostos.getMaara());
+                ostosDto.setTuote(ostos.getTuote());
+                ostosDto.setYksikko(ostos.getYksikko());
+                ostosDto.setOstettu(ostos.getOstettu());
+                ostosDto.setOsastoId(ostos.getOsastoId());
+                ostosDto.setOstosListaId(ostos.getOstosLista().getId());
+                ostosDtosList.add(ostosDto);
+            });
+        }
         return ostosDtosList;
     }
 }

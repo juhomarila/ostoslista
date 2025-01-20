@@ -64,7 +64,7 @@ public class OstosListaBusinessImpl implements OstosListaBusiness {
                 Iterator<OstosEntity> iterator = ostosListaEntity.getOstokset().iterator();
                 while (iterator.hasNext()) {
                     OstosEntity ostos = iterator.next();
-                    if (dto.getOstokset().stream().noneMatch(o -> o.getId().equals(ostos.getId()))) {
+                    if (dto.getOstokset().stream().noneMatch(o -> o.getId() != null && o.getId().equals(ostos.getId()))) {
                         iterator.remove();
                         ostosRepository.delete(ostos);
                     }
@@ -85,6 +85,13 @@ public class OstosListaBusinessImpl implements OstosListaBusiness {
                                 .findFirst()
                                 .orElse(null);
                         ostos.setOsastoId(matchingTuote != null ? matchingTuote.getOsastoId() : 0);
+                    } else if (!ostosListaEntity.getOstokset().isEmpty()
+                            && ostosListaEntity.getOstokset().stream().anyMatch(o -> o.getTuote().equals(ostosDto.getTuote())
+                            && o.getYksikko().equals(ostosDto.getYksikko()))) {
+                        OstosEntity ostos = ostosListaEntity.getOstokset().stream()
+                                .filter(o -> o.getTuote().equals(ostosDto.getTuote()) && o.getYksikko().equals(ostosDto.getYksikko()))
+                                .findFirst().get();
+                        ostos.setMaara(ostos.getMaara() + ostosDto.getMaara());
                     } else {
                         OstosEntity ostos = new OstosEntity();
                         ostos.setMaara(ostosDto.getMaara());
@@ -126,13 +133,15 @@ public class OstosListaBusinessImpl implements OstosListaBusiness {
     private OstosListaEntity saveOstosLista(OstosListaEntity ostosLista, OstosListaDto dto) {
         ostosLista.setPaiva(Instant.now());
         ostosLista.setNimi(dto.getNimi());
-        List<OstosEntity> ostokset = dto.getOstokset().stream()
-                .map(this::ostosToEntity)
-                .collect(Collectors.toList());
-        ostosLista.setOstokset(ostokset);
-        ostokset.forEach(ostos -> {
-            ostos.setOstosLista(ostosLista);
-        });
+        if (dto.getOstokset() != null) {
+            List<OstosEntity> ostokset = dto.getOstokset().stream()
+                    .map(this::ostosToEntity)
+                    .collect(Collectors.toList());
+            ostosLista.setOstokset(ostokset);
+            ostokset.forEach(ostos -> {
+                ostos.setOstosLista(ostosLista);
+            });
+        }
         repository.save(ostosLista);
         return ostosLista;
     }

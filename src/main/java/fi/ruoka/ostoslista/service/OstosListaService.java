@@ -17,4 +17,6 @@ public interface OstosListaService {
     ValidateServiceResult<List<OstosListaDto>> getAllOstosLista();
 
     ValidateServiceResult<OstosListaDto> reseptiToOstosLista(ReseptiDto dto);
+
+    ValidateServiceResult<OstosListaDto> reseptiToExistingOstosLista(ReseptiDto dto, Long id);
 }
