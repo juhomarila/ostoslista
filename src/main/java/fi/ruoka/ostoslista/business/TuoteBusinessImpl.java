@@ -1,5 +1,6 @@
 package fi.ruoka.ostoslista.business;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import fi.ruoka.ostoslista.dto.TuoteDto;
 import fi.ruoka.ostoslista.entity.TuoteEntity;
+import fi.ruoka.ostoslista.enums.Yksikko;
 import fi.ruoka.ostoslista.repository.TuoteRepository;
 
 @Service
@@ -19,6 +21,15 @@ public class TuoteBusinessImpl implements TuoteBusiness {
     private TuoteRepository tuoteRepository;
 
     private static final Logger logger = LoggerFactory.getLogger(TuoteBusinessImpl.class);
+
+    @Override
+    public List<String> getYksikot() {
+        List<String> yksikot = new ArrayList<>();
+        for (Yksikko yksikko : Yksikko.values()) {
+            yksikot.add(yksikko.getYksikko());
+        }
+        return yksikot;
+    }
 
     @Override
     public Optional<TuoteEntity> addTuote(TuoteDto dto) {

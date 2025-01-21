@@ -6,17 +6,17 @@ import fi.ruoka.ostoslista.dto.OstosListaDto;
 import fi.ruoka.ostoslista.dto.ReseptiDto;
 
 public interface OstosListaService {
-    ValidateServiceResult<OstosListaDto> createOstosLista(OstosListaDto dto);
+    ValidatedServiceResult<OstosListaDto> createOstosLista(OstosListaDto dto);
 
-    ValidateServiceResult<OstosListaDto> getOstosListaById(Long id);
+    ValidatedServiceResult<OstosListaDto> getOstosListaById(Long id);
 
-    ValidateServiceResult<OstosListaDto> updateOstosLista(Long id, OstosListaDto dto);
+    ValidatedServiceResult<OstosListaDto> updateOstosLista(Long id, OstosListaDto dto);
 
-    ValidateServiceResult<Boolean> deleteOstosLista(Long id);
+    ValidatedServiceResult<Boolean> deleteOstosLista(Long id);
 
-    ValidateServiceResult<List<OstosListaDto>> getAllOstosLista();
+    ValidatedServiceResult<List<OstosListaDto>> getAllOstosLista();
 
-    ValidateServiceResult<OstosListaDto> reseptiToOstosLista(ReseptiDto dto);
+    ValidatedServiceResult<OstosListaDto> reseptiToOstosLista(ReseptiDto dto);
 
-    ValidateServiceResult<OstosListaDto> reseptiToExistingOstosLista(ReseptiDto dto, Long id);
+    ValidatedServiceResult<OstosListaDto> reseptiToExistingOstosLista(ReseptiDto dto, Long id);
 }

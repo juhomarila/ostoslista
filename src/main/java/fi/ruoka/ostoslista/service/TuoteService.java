@@ -5,14 +5,16 @@ import java.util.List;
 import fi.ruoka.ostoslista.dto.TuoteDto;
 
 public interface TuoteService {
-    ValidateServiceResult<TuoteDto> addTuote(TuoteDto dto);
+    ValidatedServiceResult<TuoteDto> addTuote(TuoteDto dto);
 
-    ValidateServiceResult<List<TuoteDto>> getAllTuotteet();
+    ValidatedServiceResult<List<TuoteDto>> getAllTuotteet();
 
-    ValidateServiceResult<TuoteDto> getTuoteById(Long id);
+    ValidatedServiceResult<TuoteDto> getTuoteById(Long id);
 
-    ValidateServiceResult<Boolean> deleteTuote(Long id);
+    ValidatedServiceResult<Boolean> deleteTuote(Long id);
 
-    ValidateServiceResult<TuoteDto> updateTuote(Long id, TuoteDto dto);
+    ValidatedServiceResult<TuoteDto> updateTuote(Long id, TuoteDto dto);
+
+    ValidatedServiceResult<List<String>> getYksikot();
     
 }

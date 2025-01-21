@@ -30,23 +30,28 @@ public class TuoteServiceImpl implements TuoteService {
     }
 
     @Override
-    public ValidateServiceResult<TuoteDto> addTuote(TuoteDto dto) {
+    public ValidatedServiceResult<List<String>> getYksikot() {
+        return new ValidatedServiceResult<>(business.getYksikot(), new ValidationResult(true));
+    }
+
+    @Override
+    public ValidatedServiceResult<TuoteDto> addTuote(TuoteDto dto) {
         var vr = validator.validate(dto, true);
         if (!vr.validated) {
             logger.logValidationFailure(ValidationError.TE102 + vr.getErrorMsg());
-            return new ValidateServiceResult<>(null, vr);
+            return new ValidatedServiceResult<>(null, vr);
         }
         var optTuote = business.addTuote(dto);
         if (optTuote.isPresent()) {
             var tuoteDto = tuoteToDto(optTuote.get());
-            return new ValidateServiceResult<>(tuoteDto, vr);
+            return new ValidatedServiceResult<>(tuoteDto, vr);
         }
         logger.logError(ValidationError.TE104);
-        return new ValidateServiceResult<>(null, vr);
+        return new ValidatedServiceResult<>(null, vr);
     }
 
     @Override
-    public ValidateServiceResult<List<TuoteDto>> getAllTuotteet() {
+    public ValidatedServiceResult<List<TuoteDto>> getAllTuotteet() {
         List<TuoteDto> tuoteDtos = business.getAllTuotteet().stream().map(tuote -> tuoteToDto(tuote))
                 .collect(Collectors.toList());
         List<TuoteDto> validatedTuoteDtos = new ArrayList<>();
@@ -58,11 +63,11 @@ public class TuoteServiceImpl implements TuoteService {
                 logger.logValidationAndIdFailure(ValidationError.TE102 + vr.getErrorMsg(), ValidationError.TE103 + tuoteDto.getId().toString());
             }
         }
-        return new ValidateServiceResult<>(validatedTuoteDtos, new ValidationResult(true));
+        return new ValidatedServiceResult<>(validatedTuoteDtos, new ValidationResult(true));
     }
 
     @Override
-    public ValidateServiceResult<TuoteDto> getTuoteById(Long id) {
+    public ValidatedServiceResult<TuoteDto> getTuoteById(Long id) {
         Optional<TuoteEntity> optTuote = business.getTuoteById(id);
         var vr = new ValidationResult();
         if (optTuote.isEmpty()) {
@@ -71,20 +76,20 @@ public class TuoteServiceImpl implements TuoteService {
             vr.setErrorMsg(errorMsg);
 
             logger.logValidationFailure(ValidationError.TE101 + vr.getErrorMsg());
-            return new ValidateServiceResult<>(null, vr);
+            return new ValidatedServiceResult<>(null, vr);
         }
         var tuoteDto = tuoteToDto(optTuote.get());
         vr = validator.validate(tuoteDto, false);
 
         if (!vr.validated) {
             logger.logValidationAndIdFailure(ValidationError.TE102 + vr.getErrorMsg(), ValidationError.TE103 + tuoteDto.getId().toString());
-            return new ValidateServiceResult<>(null, vr);
+            return new ValidatedServiceResult<>(null, vr);
         }
-        return new ValidateServiceResult<>(tuoteDto, vr);
+        return new ValidatedServiceResult<>(tuoteDto, vr);
     }
 
     @Override
-    public ValidateServiceResult<Boolean> deleteTuote(Long id) {
+    public ValidatedServiceResult<Boolean> deleteTuote(Long id) {
         Optional<TuoteEntity> optTuote = business.getTuoteById(id);
         var vr = new ValidationResult();
         var errorMsg = new ArrayList<String>();
@@ -94,31 +99,31 @@ public class TuoteServiceImpl implements TuoteService {
             vr.setErrorMsg(errorMsg);
 
             logger.logValidationFailure(ValidationError.TE101 + vr.getErrorMsg());
-            return new ValidateServiceResult<>(false, vr);
+            return new ValidatedServiceResult<>(false, vr);
         }
         vr = validator.validate(tuoteToDto(optTuote.get()), false);
         if (vr.validated) {
             business.deleteTuote(optTuote.get().getId());
         }
-        return new ValidateServiceResult<>(vr.validated, vr);
+        return new ValidatedServiceResult<>(vr.validated, vr);
     }
 
     @Override
-    public ValidateServiceResult<TuoteDto> updateTuote(Long id, TuoteDto dto) {
+    public ValidatedServiceResult<TuoteDto> updateTuote(Long id, TuoteDto dto) {
         var vr = validator.validateUpdate(dto, id);
         if (!vr.validated) {
             logger.logValidationFailure(ValidationError.TE101 + vr.getErrorMsg());
-            return new ValidateServiceResult<>(null, vr);
+            return new ValidatedServiceResult<>(null, vr);
         }
 
         var optTuote = business.updateTuote(id, dto);
         if (optTuote.isPresent()) {
             var tuoteDto = tuoteToDto(optTuote.get());
-            return new ValidateServiceResult<>(tuoteDto, vr);
+            return new ValidatedServiceResult<>(tuoteDto, vr);
         }
 
         logger.logError(ValidationError.TE105);
-        return new ValidateServiceResult<>(null, vr);
+        return new ValidatedServiceResult<>(null, vr);
     }
 
     private TuoteDto tuoteToDto(TuoteEntity tuote) {

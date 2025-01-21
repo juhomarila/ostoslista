@@ -16,4 +16,6 @@ public interface TuoteBusiness {
     Boolean deleteTuote(Long id);
 
     Optional<TuoteEntity> updateTuote(Long id, TuoteDto dto);
+
+    List<String> getYksikot();
 }

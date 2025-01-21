@@ -28,7 +28,7 @@ public class OstosServiceImpl implements OstosService {
     }
 
     @Override
-    public ValidateServiceResult<Boolean> deleteOstos(Long id) {
+    public ValidatedServiceResult<Boolean> deleteOstos(Long id) {
         Optional<OstosEntity> optOstos = business.getOstosById(id);
         var vr = new ValidationResult();
         var errorMsg = new ArrayList<String>();
@@ -38,32 +38,32 @@ public class OstosServiceImpl implements OstosService {
             vr.setErrorMsg(errorMsg);
 
             logger.logValidationFailure(ValidationError.OE101 + vr.getErrorMsg());
-            return new ValidateServiceResult<>(false, vr);
+            return new ValidatedServiceResult<>(false, vr);
         }
         vr = validator.validate(ostosToDto(optOstos.get()));
         if (vr.validated) {
             business.deleteOstos(optOstos.get().getId());
         }
-        return new ValidateServiceResult<>(vr.validated, vr);
+        return new ValidatedServiceResult<>(vr.validated, vr);
     }
 
     @Override
-    public ValidateServiceResult<OstosDto> addOstos(Long id, OstosDto dto) {
+    public ValidatedServiceResult<OstosDto> addOstos(Long id, OstosDto dto) {
         var vr = validator.validate(dto);
         if (!vr.validated) {
             logger.logValidationFailure(ValidationError.OE102 + vr.getErrorMsg());
-            return new ValidateServiceResult<>(null, vr);
+            return new ValidatedServiceResult<>(null, vr);
         }
         Optional<OstosEntity> optOstos = business.addOstos(id, dto);
         if (optOstos.isPresent()) {
-            return new ValidateServiceResult<>(ostosToDto(optOstos.get()), vr);
+            return new ValidatedServiceResult<>(ostosToDto(optOstos.get()), vr);
         }
         logger.logError(ValidationError.OE104);
-        return new ValidateServiceResult<>(null, vr);
+        return new ValidatedServiceResult<>(null, vr);
     }
 
     @Override
-    public ValidateServiceResult<OstosDto> getOstosById(Long id) {
+    public ValidatedServiceResult<OstosDto> getOstosById(Long id) {
         Optional<OstosEntity> optOstos = business.getOstosById(id);
         var vr = new ValidationResult();
         var errorMsg = new ArrayList<String>();
@@ -73,25 +73,25 @@ public class OstosServiceImpl implements OstosService {
             vr.setErrorMsg(errorMsg);
 
             logger.logValidationFailure(ValidationError.OE101 + vr.getErrorMsg());
-            return new ValidateServiceResult<>(null, vr);
+            return new ValidatedServiceResult<>(null, vr);
         }
         vr.validated = true;
-        return new ValidateServiceResult<>(ostosToDto(optOstos.get()), vr);
+        return new ValidatedServiceResult<>(ostosToDto(optOstos.get()), vr);
     }
 
     @Override
-    public ValidateServiceResult<OstosDto> updateOstosById(Long id, OstosDto dto) {
+    public ValidatedServiceResult<OstosDto> updateOstosById(Long id, OstosDto dto) {
         var vr = validator.validate(dto);
         if (!vr.validated) {
             logger.logValidationFailure(ValidationError.OE102 + vr.getErrorMsg());
-            return new ValidateServiceResult<>(null, vr);
+            return new ValidatedServiceResult<>(null, vr);
         }
         Optional<OstosEntity> optOstos = business.updateOstosById(id, dto);
         if (optOstos.isPresent()) {
-            return new ValidateServiceResult<>(ostosToDto(optOstos.get()), vr);
+            return new ValidatedServiceResult<>(ostosToDto(optOstos.get()), vr);
         }
         logger.logError(ValidationError.OE103);
-        return new ValidateServiceResult<>(null, vr);
+        return new ValidatedServiceResult<>(null, vr);
     }
 
     private OstosDto ostosToDto(OstosEntity entity) {

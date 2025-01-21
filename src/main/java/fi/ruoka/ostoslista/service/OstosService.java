@@ -3,11 +3,11 @@ package fi.ruoka.ostoslista.service;
 import fi.ruoka.ostoslista.dto.OstosDto;
 
 public interface OstosService {
-    ValidateServiceResult<Boolean> deleteOstos(Long id);
+    ValidatedServiceResult<Boolean> deleteOstos(Long id);
 
-    ValidateServiceResult<OstosDto> addOstos(Long id, OstosDto dto);
+    ValidatedServiceResult<OstosDto> addOstos(Long id, OstosDto dto);
 
-    ValidateServiceResult<OstosDto> getOstosById(Long id);
+    ValidatedServiceResult<OstosDto> getOstosById(Long id);
 
-    ValidateServiceResult<OstosDto> updateOstosById(Long id, OstosDto dto);
+    ValidatedServiceResult<OstosDto> updateOstosById(Long id, OstosDto dto);
 }

@@ -31,6 +31,14 @@ public class TuoteController {
         this.logger = logger;
     }
 
+    @GetMapping("/yksikot")
+    public ResponseEntity<?> getYksikot() {
+        logger.getLogStart("getYksikot");
+        var vsr = tuoteService.getYksikot();
+        logger.getLogEnd("getYksikot");
+        return vsr.getT().isEmpty() ? ResponseEntity.notFound().build() : ResponseEntity.ok(vsr.getT());
+    }
+
     @PostMapping
     public ResponseEntity<?> addTuote(@Valid @RequestBody TuoteDto dto) {
         logger.postLogStart("addTuote");

@@ -35,6 +35,7 @@ public enum Tuotteet {
     PALIKAT("Palikat", 6),
     LELUMIMMI("Lelu Mimmille", 6),
     LELULAHJAKSI("Lelu Lahjaksi", 6),
+    POKEMONKORTTI("Pokemonkortti", 6),
     AA_PARISTO("AA-paristoja", 7),
     AAA_PARISTO("AAA-paristoja", 7),
     LR_44_PARISTO("LR44-paristoja", 7),

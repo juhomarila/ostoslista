@@ -7,11 +7,11 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class ValidateServiceResult<T> {
+public class ValidatedServiceResult<T> {
     private T t;
     private ValidationResult vr;
 
-    public ValidateServiceResult(T t, ValidationResult vr) {
+    public ValidatedServiceResult(T t, ValidationResult vr) {
         this.t = t;
         this.vr = vr;
     }

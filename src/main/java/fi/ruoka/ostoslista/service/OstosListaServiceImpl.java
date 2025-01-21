@@ -34,23 +34,23 @@ public class OstosListaServiceImpl implements OstosListaService {
     }
 
     @Override
-    public ValidateServiceResult<OstosListaDto> createOstosLista(OstosListaDto dto) {
+    public ValidatedServiceResult<OstosListaDto> createOstosLista(OstosListaDto dto) {
         var vr = validator.validate(dto);
         if (!vr.validated) {
             logger.logValidationFailure(ValidationError.OLE102 + vr.getErrorMsg());
-            return new ValidateServiceResult<>(null, vr);
+            return new ValidatedServiceResult<>(null, vr);
         }
         Optional<OstosListaEntity> optOstosLista = business.createOstosLista(dto);
         if (optOstosLista.isPresent()) {
             var ostosListaDto = ostosListaToDto(optOstosLista.get());
-            return new ValidateServiceResult<>(ostosListaDto, vr);
+            return new ValidatedServiceResult<>(ostosListaDto, vr);
         }
         logger.logError(ValidationError.OLE104);
-        return new ValidateServiceResult<>(null, vr);
+        return new ValidatedServiceResult<>(null, vr);
     }
 
     @Override
-    public ValidateServiceResult<OstosListaDto> reseptiToOstosLista(ReseptiDto dto) {
+    public ValidatedServiceResult<OstosListaDto> reseptiToOstosLista(ReseptiDto dto) {
         OstosListaDto ostosListaDto = new OstosListaDto();
         ostosListaDto.setNimi("Ostoslista");
         List<OstosDto> ostokset = dto.getRuokaAineet().stream()
@@ -68,12 +68,12 @@ public class OstosListaServiceImpl implements OstosListaService {
     }
 
     @Override
-    public ValidateServiceResult<OstosListaDto> reseptiToExistingOstosLista(ReseptiDto dto, Long id) {
+    public ValidatedServiceResult<OstosListaDto> reseptiToExistingOstosLista(ReseptiDto dto, Long id) {
         OstosListaDto ostosListaDto = new OstosListaDto();
         Optional<OstosListaEntity> ostosListaEntity = business.getOstosListaById(id);
         if (ostosListaEntity.isEmpty()) {
             logger.logError(ValidationError.OLE101);
-            return new ValidateServiceResult<>(null, new ValidationResult());
+            return new ValidatedServiceResult<>(null, new ValidationResult());
         }
         OstosListaEntity entity = ostosListaEntity.get();
         ostosListaDto.setNimi(entity.getNimi());
@@ -94,7 +94,7 @@ public class OstosListaServiceImpl implements OstosListaService {
     }
 
     @Override
-    public ValidateServiceResult<List<OstosListaDto>> getAllOstosLista() {
+    public ValidatedServiceResult<List<OstosListaDto>> getAllOstosLista() {
         List<OstosListaDto> ostosListaDtos = business.getAllOstosLista().stream()
                 .map(ostosLista -> ostosListaToDto(ostosLista))
                 .collect(Collectors.toList());
@@ -108,11 +108,11 @@ public class OstosListaServiceImpl implements OstosListaService {
                         ValidationError.OLE103 + ostosListaDto.getId().toString());
             }
         }
-        return new ValidateServiceResult<>(validatedOstosListaDtos, new ValidationResult());
+        return new ValidatedServiceResult<>(validatedOstosListaDtos, new ValidationResult());
     }
 
     @Override
-    public ValidateServiceResult<OstosListaDto> getOstosListaById(Long id) {
+    public ValidatedServiceResult<OstosListaDto> getOstosListaById(Long id) {
         Optional<OstosListaEntity> optOstosLista = business.getOstosListaById(id);
         var vr = new ValidationResult();
         if (optOstosLista.isEmpty()) {
@@ -121,7 +121,7 @@ public class OstosListaServiceImpl implements OstosListaService {
             vr.setErrorMsg(errorMsg);
 
             logger.logValidationFailure(ValidationError.OLE101 + vr.getErrorMsg());
-            return new ValidateServiceResult<>(null, vr);
+            return new ValidatedServiceResult<>(null, vr);
         }
         var ostosListaDto = ostosListaToDto(optOstosLista.get());
         vr = validator.validate(ostosListaDto);
@@ -129,29 +129,29 @@ public class OstosListaServiceImpl implements OstosListaService {
         if (!vr.validated) {
             logger.logValidationAndIdFailure(ValidationError.OLE102 + vr.getErrorMsg(),
                     ValidationError.OLE103 + ostosListaDto.getId().toString());
-            return new ValidateServiceResult<>(null, vr);
+            return new ValidatedServiceResult<>(null, vr);
         }
-        return new ValidateServiceResult<>(ostosListaDto, vr);
+        return new ValidatedServiceResult<>(ostosListaDto, vr);
     }
 
     @Override
-    public ValidateServiceResult<OstosListaDto> updateOstosLista(Long id, OstosListaDto dto) {
+    public ValidatedServiceResult<OstosListaDto> updateOstosLista(Long id, OstosListaDto dto) {
         var vr = validator.validateUpdate(dto, id);
         if (!vr.validated) {
             logger.logValidationFailure(ValidationError.OLE102 + vr.getErrorMsg());
-            return new ValidateServiceResult<>(null, vr);
+            return new ValidatedServiceResult<>(null, vr);
         }
         Optional<OstosListaEntity> optOstosLista = business.updateOstosLista(id, dto);
         if (optOstosLista.isPresent()) {
             var ostosListaDto = ostosListaToDto(optOstosLista.get());
-            return new ValidateServiceResult<>(ostosListaDto, vr);
+            return new ValidatedServiceResult<>(ostosListaDto, vr);
         }
         logger.logError(ValidationError.OLE105);
-        return new ValidateServiceResult<>(null, vr);
+        return new ValidatedServiceResult<>(null, vr);
     }
 
     @Override
-    public ValidateServiceResult<Boolean> deleteOstosLista(Long id) {
+    public ValidatedServiceResult<Boolean> deleteOstosLista(Long id) {
         Optional<OstosListaEntity> optOstosLista = business.getOstosListaById(id);
         var vr = new ValidationResult();
         var errorMsg = new ArrayList<String>();
@@ -161,13 +161,13 @@ public class OstosListaServiceImpl implements OstosListaService {
             vr.setErrorMsg(errorMsg);
 
             logger.logValidationFailure(ValidationError.RE101 + vr.getErrorMsg());
-            return new ValidateServiceResult<>(false, vr);
+            return new ValidatedServiceResult<>(false, vr);
         }
         vr = validator.validate(ostosListaToDto(optOstosLista.get()));
         if (vr.validated) {
             business.deleteOstosLista(optOstosLista.get().getId());
         }
-        return new ValidateServiceResult<>(vr.validated, vr);
+        return new ValidatedServiceResult<>(vr.validated, vr);
     }
 
     private OstosListaDto ostosListaToDto(OstosListaEntity entity) {
