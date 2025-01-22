@@ -27,6 +27,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public ValidatedServiceResult<LoginDto> login(UserDto dto) {
+        System.out.println("TÄÄLLÄ OLLAAN");
         var vr = validator.validate(dto);
         if (!vr.validated) {
             logger.logValidationFailure(ValidationError.UE101 + vr.getErrorMsg());

@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -46,6 +47,7 @@ public class ReseptiController {
     @GetMapping
     @PermitAll
     public ResponseEntity<List<ReseptiDto>> getAllResepti() {
+        System.out.println("Reseptissä: " + SecurityContextHolder.getContext().getAuthentication());
         logger.getLogStart("getAllResepti");
         var vsr = reseptiService.getAllResepti();
         logger.getLogEnd("getAllResepti");

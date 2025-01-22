@@ -3,6 +3,7 @@ package fi.ruoka.ostoslista.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -30,6 +31,7 @@ public class UserController {
         logger.postLogStart("login");
         var vsr = userService.login(dto);
         logger.postLogEnd("login");
+        System.out.println(SecurityContextHolder.getContext().getAuthentication());
         return vsr.getVr().validated ? new ResponseEntity<>(vsr.getT(), HttpStatus.OK)
                 : new ResponseEntity<>(vsr.getVr().getErrorMsg(),
                         vsr.getVr().validated ? HttpStatus.INTERNAL_SERVER_ERROR

@@ -27,6 +27,7 @@ public class UserBusinessImpl implements UserBusiness {
     @Override
     public LoginDto login(UserDto dto) {
         try {
+            System.out.println("TÄÄLLÄ OLLAAN2");
             UserEntity user = userRepository.findByKayttajatunnus(dto.getKayttajatunnus());
             if (user != null && PasswordUtil.verifyPassword(dto.getSalasana(), user.getSalasana())) {
                 JwtUtil jwtUtil = new JwtUtil(env);
