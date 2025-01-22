@@ -30,7 +30,7 @@ public class WebSecurityConfig implements WebMvcConfigurer {
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(HttpMethod.OPTIONS,"/**").permitAll() // CORS preflight requests
+                        .requestMatchers(HttpMethod.OPTIONS,"/**").permitAll() 
                         .requestMatchers("/api/user/**").permitAll()
                         .requestMatchers("/api/tuotteet/**").authenticated()
                         .requestMatchers("/api/reseptit/**").authenticated()
@@ -43,7 +43,7 @@ public class WebSecurityConfig implements WebMvcConfigurer {
 
     @Override
     public void addCorsMappings(@SuppressWarnings("null") CorsRegistry registry) {
-        registry.addMapping("/**").allowedOrigins("*").allowedMethods("GET", "POST", "PUT", "DELETE")
-                .allowedHeaders("*");
+        registry.addMapping("/api/**").allowedOrigins("*").allowedMethods("GET", "POST", "PUT", "DELETE")
+                .allowedHeaders("*").exposedHeaders("Access-Control-Allow-Origin", "Access-Control-Allow-Credentials");
     }
 }
