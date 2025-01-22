@@ -27,7 +27,6 @@ public class ReseptiServiceImpl implements ReseptiService {
 
     private final OstosListaLogger logger;
 
-    @Autowired
     public ReseptiServiceImpl(OstosListaLogger logger) {
         this.logger = logger;
     }

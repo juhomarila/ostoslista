@@ -2,7 +2,8 @@ package fi.ruoka.ostoslista.service;
 
 public class ValidationError {
     /*
-     * VE is ValidationError, EE is EmployerError, RE is RatingError, JE is JobError
+     * VE is ValidationError, RE is ReseptiError, OLE is OstoslistaError, OE is
+     * OstosError, TE is TuoteError, UE is UserError
      * 
      */
     public static final String VE001 = "VE001: null";
@@ -35,4 +36,6 @@ public class ValidationError {
     public static final String TE104 = "TE104: tuote save error ";
     public static final String TE105 = "TE105: tuote update error ";
     public static final String TE106 = "TE106: tuote delete error ";
+    public static final String UE101 = "UE101: user not found ";
+    public static final String UE102 = "UE102: user password mismatch ";
 }

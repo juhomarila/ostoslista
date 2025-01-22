@@ -29,7 +29,6 @@ public class ReseptiController {
 
     private final OstosListaLogger logger;
 
-    @Autowired
     public ReseptiController(OstosListaLogger logger) {
         this.logger = logger;
     }

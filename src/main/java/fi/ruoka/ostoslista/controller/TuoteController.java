@@ -20,13 +20,12 @@ import jakarta.validation.Valid;
 @RestController
 @RequestMapping("/api/tuotteet")
 public class TuoteController {
-    
+
     @Autowired
     private TuoteService tuoteService;
 
     private final OstosListaLogger logger;
 
-    @Autowired
     public TuoteController(OstosListaLogger logger) {
         this.logger = logger;
     }

@@ -22,7 +22,6 @@ public class OstosServiceImpl implements OstosService {
 
     private final OstosListaLogger logger;
 
-    @Autowired
     public OstosServiceImpl(OstosListaLogger logger) {
         this.logger = logger;
     }

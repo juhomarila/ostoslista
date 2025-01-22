@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,7 +27,6 @@ public class OstosListaServiceImpl implements OstosListaService {
 
     private final OstosListaLogger logger;
 
-    @Autowired
     public OstosListaServiceImpl(OstosListaLogger logger) {
         this.logger = logger;
     }

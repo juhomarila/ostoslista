@@ -18,13 +18,14 @@ public class ClientIpLoggingFilter extends OncePerRequestFilter {
     private static final Logger logger = LoggerFactory.getLogger(ClientIpLoggingFilter.class);
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+    protected void doFilterInternal(@SuppressWarnings("null") HttpServletRequest request,
+            @SuppressWarnings("null") HttpServletResponse response, @SuppressWarnings("null") FilterChain filterChain)
             throws ServletException, IOException {
         String xforwardedForIp = getForwardedForIp(request);
         String clientIp = getXRealIp(request);
         logger.info("X-Forwarded-For IP: {}", xforwardedForIp);
         logger.info("X-Real-IP: {}", clientIp);
-        
+
         filterChain.doFilter(request, response);
     }
 

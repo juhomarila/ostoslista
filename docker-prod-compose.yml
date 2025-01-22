@@ -24,4 +24,6 @@ services:
       db: ${db}
       user: ${user}
       pass: ${pass}
-
+      secret: ${secret} 
+      userEntity: ${userEntity}
+      userEntityPass: ${userEntityPass}

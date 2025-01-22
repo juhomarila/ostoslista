@@ -24,7 +24,6 @@ public class TuoteServiceImpl implements TuoteService {
 
     private final OstosListaLogger logger;
 
-    @Autowired
     public TuoteServiceImpl(OstosListaLogger logger) {
         this.logger = logger;
     }
@@ -60,7 +59,8 @@ public class TuoteServiceImpl implements TuoteService {
             if (vr.validated) {
                 validatedTuoteDtos.add(tuoteDto);
             } else {
-                logger.logValidationAndIdFailure(ValidationError.TE102 + vr.getErrorMsg(), ValidationError.TE103 + tuoteDto.getId().toString());
+                logger.logValidationAndIdFailure(ValidationError.TE102 + vr.getErrorMsg(),
+                        ValidationError.TE103 + tuoteDto.getId().toString());
             }
         }
         return new ValidatedServiceResult<>(validatedTuoteDtos, new ValidationResult(true));
@@ -82,7 +82,8 @@ public class TuoteServiceImpl implements TuoteService {
         vr = validator.validate(tuoteDto, false);
 
         if (!vr.validated) {
-            logger.logValidationAndIdFailure(ValidationError.TE102 + vr.getErrorMsg(), ValidationError.TE103 + tuoteDto.getId().toString());
+            logger.logValidationAndIdFailure(ValidationError.TE102 + vr.getErrorMsg(),
+                    ValidationError.TE103 + tuoteDto.getId().toString());
             return new ValidatedServiceResult<>(null, vr);
         }
         return new ValidatedServiceResult<>(tuoteDto, vr);
