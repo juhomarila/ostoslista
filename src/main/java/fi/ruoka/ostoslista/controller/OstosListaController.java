@@ -24,7 +24,7 @@ import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/ostoslista")
-@CrossOrigin
+@CrossOrigin("*")
 public class OstosListaController {
 
     @Autowired

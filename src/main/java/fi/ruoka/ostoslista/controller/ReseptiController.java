@@ -24,7 +24,7 @@ import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/reseptit")
-@CrossOrigin
+@CrossOrigin("*")
 public class ReseptiController {
 
     @Autowired

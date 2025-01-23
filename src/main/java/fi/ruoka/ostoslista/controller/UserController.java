@@ -16,7 +16,7 @@ import fi.ruoka.ostoslista.service.UserService;
 
 @RestController
 @RequestMapping("/api/user")
-@CrossOrigin
+@CrossOrigin("*")
 public class UserController {
 
     @Autowired
