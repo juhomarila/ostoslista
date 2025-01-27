@@ -18,7 +18,11 @@ public enum Yksikko {
     RIPAUS("ripaus"),
     RUUKKU("ruukku"),
     PULLO("pullo"),
-    LAATIKKO("laatikko");
+    LAATIKKO("laatikko"),
+    HIEMAN("hieman"),
+    HYPPYSELLINEN("hyppysellinen"),
+    LORAUS("loraus"),
+    TILKKA("tilkka"),;
 
     private final String yksikko;
 
