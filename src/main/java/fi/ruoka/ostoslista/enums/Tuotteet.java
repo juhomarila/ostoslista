@@ -20,6 +20,7 @@ public enum Tuotteet {
     SLÄPÄRITMIMMI("Släpärit Mimmille", 3),
     BOKSERITISI("Bokserit Isille", 4),
     PIKKARITMIMMI("Pikkarit Mimmille", 4),
+    URHEILUSUKATISI("Urheilusukat Isille", 4),
     SUKATISI("Sukat Isille", 4),
     SUKATMIMMI("Sukat Mimmille", 4),
     SUKATÄITI("Sukat Äidille", 4),
@@ -169,7 +170,7 @@ public enum Tuotteet {
     SMETANA("Smetanaa", 19),
     KERMAVIILI("Kermaviiliä", 19),
     RANSKANKERMA("Ranskankermaa", 19),
-    TURKKILAISTAJOUGURTTI("Turkkilaista jogurttia", 19),
+    TURKKILAISTAJOGURTTI("Turkkilaista jogurttia", 19),
     HERKKUKINKKU("Herkkukinkkua", 20),
     KORPPUKINKKU("Korppukinkkua", 20),
     KALKKUNALEIKE("Kalkkunaleikettä", 20),
@@ -342,7 +343,6 @@ public enum Tuotteet {
     private final String tuote;
     private final int osastoId;
 
-
     Tuotteet(String tuote, int osastoId) {
         this.tuote = tuote;
         this.osastoId = osastoId;
@@ -355,8 +355,6 @@ public enum Tuotteet {
     public int getOsastoId() {
         return osastoId;
     }
-
-
 
     @Override
     public String toString() {

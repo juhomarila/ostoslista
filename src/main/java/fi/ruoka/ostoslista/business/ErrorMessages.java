@@ -14,4 +14,5 @@ public class ErrorMessages {
     public static final String TUOTE_UPDATE_ERROR = "Failed to update tuote to the database ";
     public static final String TUOTE_DELETION_ERROR = "Failed to delete tuote ";
     public static final String USER_LOGIN_ERROR = "Failed to login user ";
+    public static final String USER_REFRESH_TOKEN_ERROR = "Refresh token error ";
 }

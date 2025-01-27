@@ -5,6 +5,7 @@ import java.util.Date;
 import org.springframework.core.env.Environment;
 
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 
@@ -16,10 +17,9 @@ public class JwtUtil {
         this.env = env;
     }
 
-    private static final long EXPIRATION_TIME = 1000 * 60 * 60 * 24 * 365;
+    private static final long EXPIRATION_TIME = 1000 * 60 * 15; // 15 minutes
 
     public String generateToken(String username) {
-        System.out.println("SIIKRITTI: " + env.getProperty("jwt.secret"));
         return Jwts.builder()
                 .setSubject(username)
                 .setIssuedAt(new Date())
@@ -34,18 +34,48 @@ public class JwtUtil {
     }
 
     public String extractUsername(String token) {
-        return extractClaims(token).getSubject();
+        try {
+            return extractClaims(token).getSubject();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public String generateRefreshToken(String username) {
+        return Jwts.builder()
+                .setSubject(username)
+                .setIssuedAt(new Date())
+                .setExpiration(new Date(System.currentTimeMillis() + (1000 * 60 * 60 * 24 * 31))) // 31 days
+                .signWith(SignatureAlgorithm.HS256, env.getProperty("jwt.secret"))
+                .compact();
+    }
+
+    public boolean validateRefreshToken(String token) {
+        try {
+            extractClaims(token);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     private boolean isTokenExpired(String token) {
-        return extractClaims(token).getExpiration().before(new Date());
+        try {
+            return extractClaims(token).getExpiration().before(new Date());
+        } catch (Exception e) {
+            return true;
+        }
     }
 
-    private Claims extractClaims(String token) {
-        System.out.println("TOOKKENI: " + token);
-        return Jwts.parser()
-                .setSigningKey(env.getProperty("jwt.secret"))
-                .parseClaimsJws(token)
-                .getBody();
+    private Claims extractClaims(String token) throws Exception {
+        try {
+            return Jwts.parser()
+                    .setSigningKey(env.getProperty("jwt.secret"))
+                    .parseClaimsJws(token)
+                    .getBody();
+        } catch (ExpiredJwtException e) {
+            throw new Exception("Token has expired");
+        }
+
     }
 }

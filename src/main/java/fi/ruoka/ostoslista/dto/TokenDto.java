@@ -11,17 +11,20 @@ import lombok.ToString;
 @Setter
 @NoArgsConstructor
 @ToString
-public class LoginDto {
+public class TokenDto {
     @NotNull
     private boolean success;
     @NotBlank
     private String message;
     @NotBlank
-    private String token;
+    private String accessToken;
+    @NotBlank
+    private String refreshToken;
 
-    public LoginDto(boolean success, String message, String token) {
+    public TokenDto(boolean success, String message, String accessToken, String refreshToken) {
         this.success = success;
         this.message = message;
-        this.token = token;
+        this.accessToken = accessToken;
+        this.refreshToken = refreshToken;
     }
 }

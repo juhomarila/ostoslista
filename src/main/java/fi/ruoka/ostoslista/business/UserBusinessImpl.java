@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
-import fi.ruoka.ostoslista.dto.LoginDto;
+import fi.ruoka.ostoslista.dto.TokenDto;
 import fi.ruoka.ostoslista.dto.UserDto;
 import fi.ruoka.ostoslista.entity.UserEntity;
 import fi.ruoka.ostoslista.repository.UserRepository;
@@ -25,20 +25,41 @@ public class UserBusinessImpl implements UserBusiness {
     private static final Logger logger = LoggerFactory.getLogger(UserBusinessImpl.class);
 
     @Override
-    public LoginDto login(UserDto dto) {
+    public TokenDto login(UserDto dto) {
         try {
-            System.out.println("TÄÄLLÄ OLLAAN2");
             UserEntity user = userRepository.findByKayttajatunnus(dto.getKayttajatunnus());
             if (user != null && PasswordUtil.verifyPassword(dto.getSalasana(), user.getSalasana())) {
                 JwtUtil jwtUtil = new JwtUtil(env);
-                String token = jwtUtil.generateToken(dto.getKayttajatunnus());
-                return new LoginDto(true, "Kirjautuminen onnistui", token);
+                String accessToken = jwtUtil.generateToken(dto.getKayttajatunnus());
+                String refreshToken = jwtUtil.generateRefreshToken(dto.getKayttajatunnus());
+                return new TokenDto(true, "Kirjautuminen onnistui", accessToken, refreshToken);
             }
-            return new LoginDto(false, "Kirjautuminen epäonnistui", null);
+            return new TokenDto(false, "Kirjautuminen epäonnistui", null, null);
         } catch (Exception e) {
             logger.error(ErrorMessages.USER_LOGIN_ERROR + e.getMessage(), e);
             e.printStackTrace();
-            return new LoginDto(false, "Kirjautuminen epäonnistui, järjestelmässä tapahtui virhe", null);
+            return new TokenDto(false, "Kirjautuminen epäonnistui, järjestelmässä tapahtui virhe", null, null);
         }
+    }
+
+    @Override
+    public TokenDto refreshToken(String refreshToken) {
+        try {
+            JwtUtil jwtUtil = new JwtUtil(env);
+            if (jwtUtil.validateRefreshToken(refreshToken)) {
+                String username = jwtUtil.extractUsername(refreshToken);
+                String newAccessToken = jwtUtil.generateToken(username);
+                String newRefreshToken = jwtUtil.generateRefreshToken(username);
+
+                return new TokenDto(true, "Token uusittu onnistuneesti", newAccessToken, newRefreshToken);
+            } else {
+                return new TokenDto(false, "Tokenin uusiminen epäonnistui", null, null);
+            }
+        } catch (Exception e) {
+            logger.error(ErrorMessages.USER_REFRESH_TOKEN_ERROR + e.getMessage(), e);
+            e.printStackTrace();
+            return new TokenDto(false, "Tokenin uusiminen epäonnistui, järjestelmässä tapahtui virhe", null, null);
+        }
+
     }
 }

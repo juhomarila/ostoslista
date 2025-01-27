@@ -49,11 +49,10 @@ public class ReseptiController {
     @GetMapping
     @PermitAll
     public ResponseEntity<List<ReseptiDto>> getAllResepti() {
-        System.out.println("Reseptissä: " + SecurityContextHolder.getContext().getAuthentication());
         logger.getLogStart("getAllResepti");
         var vsr = reseptiService.getAllResepti();
         logger.getLogEnd("getAllResepti");
-        return vsr.getT().isEmpty() ? ResponseEntity.notFound().build() : ResponseEntity.ok(vsr.getT());
+        return vsr.getT().isEmpty() ? ResponseEntity.noContent().build() : ResponseEntity.ok(vsr.getT());
     }
 
     @GetMapping("/{id}")

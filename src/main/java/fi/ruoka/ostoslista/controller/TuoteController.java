@@ -38,7 +38,7 @@ public class TuoteController {
         logger.getLogStart("getYksikot");
         var vsr = tuoteService.getYksikot();
         logger.getLogEnd("getYksikot");
-        return vsr.getT().isEmpty() ? ResponseEntity.notFound().build() : ResponseEntity.ok(vsr.getT());
+        return vsr.getT().isEmpty() ? ResponseEntity.noContent().build() : ResponseEntity.ok(vsr.getT());
     }
 
     @PostMapping
@@ -53,11 +53,10 @@ public class TuoteController {
 
     @GetMapping
     public ResponseEntity<?> getAllTuotteet() {
-        System.out.println("Tuotteessa: " + SecurityContextHolder.getContext().getAuthentication());
         logger.getLogStart("getAllTuotteet");
         var vsr = tuoteService.getAllTuotteet();
         logger.getLogEnd("getAllTuotteet");
-        return vsr.getT().isEmpty() ? ResponseEntity.notFound().build() : ResponseEntity.ok(vsr.getT());
+        return vsr.getT().isEmpty() ? ResponseEntity.noContent().build() : ResponseEntity.ok(vsr.getT());
     }
 
     @GetMapping("/{id}")

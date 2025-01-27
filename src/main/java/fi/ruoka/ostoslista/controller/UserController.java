@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import fi.ruoka.ostoslista.dto.UserDto;
 import fi.ruoka.ostoslista.logging.OstosListaLogger;
 import fi.ruoka.ostoslista.service.UserService;
+import jakarta.servlet.http.HttpServletRequest;
 
 @RestController
 @RequestMapping("/api/user")
@@ -33,7 +34,18 @@ public class UserController {
         logger.postLogStart("login");
         var vsr = userService.login(dto);
         logger.postLogEnd("login");
-        System.out.println(SecurityContextHolder.getContext().getAuthentication());
+        return vsr.getVr().validated ? new ResponseEntity<>(vsr.getT(), HttpStatus.OK)
+                : new ResponseEntity<>(vsr.getVr().getErrorMsg(),
+                        vsr.getVr().validated ? HttpStatus.INTERNAL_SERVER_ERROR
+                                : HttpStatus.BAD_REQUEST);
+    }
+
+    @PostMapping("/refresh")
+    public ResponseEntity<?> refreshToken(HttpServletRequest request) {
+        logger.postLogStart("refreshToken");
+        String refreshToken = request.getHeader("Authorization");
+        var vsr = userService.refreshToken(refreshToken);
+        logger.postLogEnd("refreshToken");
         return vsr.getVr().validated ? new ResponseEntity<>(vsr.getT(), HttpStatus.OK)
                 : new ResponseEntity<>(vsr.getVr().getErrorMsg(),
                         vsr.getVr().validated ? HttpStatus.INTERNAL_SERVER_ERROR
