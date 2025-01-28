@@ -77,6 +77,7 @@ public class OstosBusinessImpl implements OstosBusiness {
             e.printStackTrace();
             return Optional.empty();
         }
+        logger.warn("OstosListaEntity with id {} not found.", id);
         return Optional.empty();
     }
 
@@ -108,6 +109,7 @@ public class OstosBusinessImpl implements OstosBusiness {
             e.printStackTrace();
             return Optional.empty();
         }
+        logger.warn("OstosEntity with id {} not found.", id);
         return Optional.empty();
     }
 }

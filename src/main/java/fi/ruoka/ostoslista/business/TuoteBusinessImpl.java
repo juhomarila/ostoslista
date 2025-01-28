@@ -89,6 +89,7 @@ public class TuoteBusinessImpl implements TuoteBusiness {
                 tuoteEntity = tuoteRepository.save(tuoteEntity);
                 return Optional.of(tuoteEntity);
             }
+            logger.warn(ErrorMessages.TUOTE_UPDATE_ERROR + " Tuote not found");
             return Optional.empty();
         } catch (Exception e) {
             logger.error(ErrorMessages.TUOTE_UPDATE_ERROR + e.getMessage(), e);

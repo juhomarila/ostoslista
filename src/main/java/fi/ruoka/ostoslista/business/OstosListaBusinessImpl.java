@@ -111,6 +111,7 @@ public class OstosListaBusinessImpl implements OstosListaBusiness {
                 repository.save(ostosListaEntity);
                 return Optional.of(ostosListaEntity);
             }
+            logger.warn(ErrorMessages.OL_UPDATE_ERROR + "OstosListaEntity not found.");
             return Optional.empty();
 
         } catch (Exception e) {

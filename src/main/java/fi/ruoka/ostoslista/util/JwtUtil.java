@@ -2,6 +2,8 @@ package fi.ruoka.ostoslista.util;
 
 import java.util.Date;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.core.env.Environment;
 
 import io.jsonwebtoken.Claims;
@@ -17,7 +19,9 @@ public class JwtUtil {
         this.env = env;
     }
 
-    private static final long EXPIRATION_TIME = 1000 * 60 * 15; // 15 minutes
+    private static final Logger logger = LoggerFactory.getLogger(JwtUtil.class);
+
+    private static final long EXPIRATION_TIME = 1000L * 60 * 15; // 15 minutes
 
     public String generateToken(String username) {
         return Jwts.builder()
@@ -42,10 +46,11 @@ public class JwtUtil {
     }
 
     public String generateRefreshToken(String username) {
+        long expirationDuration = 1000L * 60 * 60 * 24 * 31;
         return Jwts.builder()
                 .setSubject(username)
                 .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + (1000 * 60 * 60 * 24 * 31))) // 31 days
+                .setExpiration(new Date(System.currentTimeMillis() + expirationDuration)) // 31 days
                 .signWith(SignatureAlgorithm.HS256, env.getProperty("jwt.secret"))
                 .compact();
     }
@@ -55,6 +60,7 @@ public class JwtUtil {
             extractClaims(token);
             return true;
         } catch (Exception e) {
+            logger.error("Error validating refresh token: " + e.getMessage());
             return false;
         }
     }
@@ -74,7 +80,7 @@ public class JwtUtil {
                     .parseClaimsJws(token)
                     .getBody();
         } catch (ExpiredJwtException e) {
-            throw new Exception("Token has expired");
+            throw new Exception(e.getMessage());
         }
 
     }

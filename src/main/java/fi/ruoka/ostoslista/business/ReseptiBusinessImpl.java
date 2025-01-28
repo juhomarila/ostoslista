@@ -81,6 +81,7 @@ public class ReseptiBusinessImpl implements ReseptiBusiness {
                 ReseptiEntity savedReseptiEntity = reseptiRepository.save(reseptiEntity);
                 return Optional.of(savedReseptiEntity);
             }
+            logger.warn(ErrorMessages.RESEPTI_UPDATE_ERROR + " Resepti not found");
             return Optional.empty();
         } catch (Exception e) {
             logger.error(ErrorMessages.RESEPTI_UPDATE_ERROR + e.getMessage(), e);

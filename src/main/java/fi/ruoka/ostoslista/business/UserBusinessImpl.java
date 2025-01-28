@@ -34,6 +34,7 @@ public class UserBusinessImpl implements UserBusiness {
                 String refreshToken = jwtUtil.generateRefreshToken(dto.getKayttajatunnus());
                 return new TokenDto(true, "Kirjautuminen onnistui", accessToken, refreshToken);
             }
+            logger.warn("Kirjautuminen epäonnistui");
             return new TokenDto(false, "Kirjautuminen epäonnistui", null, null);
         } catch (Exception e) {
             logger.error(ErrorMessages.USER_LOGIN_ERROR + e.getMessage(), e);
@@ -50,9 +51,9 @@ public class UserBusinessImpl implements UserBusiness {
                 String username = jwtUtil.extractUsername(refreshToken);
                 String newAccessToken = jwtUtil.generateToken(username);
                 String newRefreshToken = jwtUtil.generateRefreshToken(username);
-
                 return new TokenDto(true, "Token uusittu onnistuneesti", newAccessToken, newRefreshToken);
             } else {
+                logger.warn(ErrorMessages.USER_REFRESH_TOKEN_ERROR + "Tokenin uusiminen epäonnistui");   
                 return new TokenDto(false, "Tokenin uusiminen epäonnistui", null, null);
             }
         } catch (Exception e) {
