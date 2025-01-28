@@ -35,11 +35,26 @@ public class TuoteStartupRunner implements CommandLineRunner {
     public void run(String... args) throws Exception {
 
         if (userRepository.count() == 0) {
-            UserEntity user = new UserEntity();
-            user.setKayttajatunnus(env.getProperty("user.Entity"));
-            user.setSalasana(PasswordUtil.hashPassword(env.getProperty("user.EntityPass")));
-            userRepository.save(user);
-            System.out.println("UserEntity table populated successfully!");
+            String users = env.getProperty("user.Entity");
+            String passwords = env.getProperty("user.EntityPass");
+
+            if (users != null && passwords != null) {
+                String[] userArray = users.split(",");
+                String[] passwordArray = passwords.split(",");
+
+                if (userArray.length != passwordArray.length) {
+                    throw new IllegalArgumentException("Mismatch between number of users and passwords in .env file.");
+                }
+
+                for (int i = 0; i < userArray.length; i++) {
+                    UserEntity user = new UserEntity();
+                    user.setKayttajatunnus(userArray[i].trim());
+                    user.setSalasana(PasswordUtil.hashPassword(passwordArray[i].trim()));
+                    userRepository.save(user);
+                }
+            }
+
+            System.out.println("UserEntity table populated successfully with multiple users!");
         }
         synchronizeTuoteRepository();
     }
