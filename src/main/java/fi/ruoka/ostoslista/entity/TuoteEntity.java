@@ -14,7 +14,7 @@ import lombok.Setter;
 @Setter
 public class TuoteEntity {
     @Id
-    @GeneratedValue(strategy=GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
     @NotBlank
@@ -23,5 +23,8 @@ public class TuoteEntity {
     @NotNull
     private Integer osasto;
 
-    private double hinta;  
+    private double hinta;
+
+    @NotBlank
+    private String yksikko;
 }

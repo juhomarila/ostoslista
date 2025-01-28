@@ -41,7 +41,8 @@ public class TuoteBusinessImpl implements TuoteBusiness {
             }
             if (dto.getHinta() != 0.0) {
                 tuote.setHinta(dto.getHinta());
-            }  
+            }
+            tuote.setYksikko(dto.getYksikko());
             tuote = tuoteRepository.save(tuote);
             return Optional.of(tuote);
         } catch (Exception e) {
@@ -86,6 +87,7 @@ public class TuoteBusinessImpl implements TuoteBusiness {
                 if (dto.getHinta() != 0.0) {
                     tuoteEntity.setHinta(dto.getHinta());
                 }
+                tuoteEntity.setYksikko(dto.getYksikko());
                 tuoteEntity = tuoteRepository.save(tuoteEntity);
                 return Optional.of(tuoteEntity);
             }

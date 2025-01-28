@@ -22,7 +22,12 @@ public enum Yksikko {
     HIEMAN("hieman"),
     HYPPYSELLINEN("hyppysellinen"),
     LORAUS("loraus"),
-    TILKKA("tilkka"),;
+    TILKKA("tilkka"),
+    PARI("pari"),
+    RULLA("rulla"),
+    TUUBI("tuubi"),
+    TÖLKKI("tölkki"),
+    KYNSI("kynsi"),;
 
     private final String yksikko;
 

@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import fi.ruoka.ostoslista.algorithms.GenerateOstosLista;
 import fi.ruoka.ostoslista.business.OstosListaBusiness;
 import fi.ruoka.ostoslista.dto.OstosDto;
 import fi.ruoka.ostoslista.dto.OstosListaDto;
@@ -24,6 +25,9 @@ public class OstosListaServiceImpl implements OstosListaService {
 
     @Autowired
     private OstosListaValidator validator;
+
+    @Autowired
+    private GenerateOstosLista generateOstosLista;
 
     private final OstosListaLogger logger;
 
@@ -52,14 +56,7 @@ public class OstosListaServiceImpl implements OstosListaService {
         OstosListaDto ostosListaDto = new OstosListaDto();
         ostosListaDto.setNimi("Ostoslista");
         List<OstosDto> ostokset = dto.getRuokaAineet().stream()
-                .map(ra -> {
-                    OstosDto ostos = new OstosDto();
-                    ostos.setMaara(ra.getMaara());
-                    ostos.setTuote(ra.getRuokaAine());
-                    ostos.setYksikko(ra.getYksikko());
-                    ostos.setOstettu(false);
-                    return ostos;
-                })
+                .map(ra -> generateOstosLista.generateOstosFromRuokaAine(ra))
                 .collect(Collectors.toList());
         ostosListaDto.setOstokset(ostokset);
         return createOstosLista(ostosListaDto);
@@ -76,14 +73,7 @@ public class OstosListaServiceImpl implements OstosListaService {
         OstosListaEntity entity = ostosListaEntity.get();
         ostosListaDto.setNimi(entity.getNimi());
         List<OstosDto> ostokset = dto.getRuokaAineet().stream()
-                .map(ra -> {
-                    OstosDto ostos = new OstosDto();
-                    ostos.setMaara(ra.getMaara());
-                    ostos.setTuote(ra.getRuokaAine());
-                    ostos.setYksikko(ra.getYksikko());
-                    ostos.setOstettu(false);
-                    return ostos;
-                })
+                .map(ra -> generateOstosLista.generateOstosFromRuokaAine(ra))
                 .collect(Collectors.toList());
         ostokset.addAll(ostosToDto(entity.getOstokset()));
         ostosListaDto.setOstokset(ostokset);

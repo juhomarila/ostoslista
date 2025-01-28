@@ -18,4 +18,6 @@ public class TuoteDto {
     @NotNull
     private Integer osasto;
     private double hinta;
+    @NotBlank
+    private String yksikko;
 }
