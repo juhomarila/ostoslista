@@ -134,6 +134,9 @@ public class GenerateOstosLista {
                 || dto.getRuokaAine().equals(Tuotteet.CHILIJAUHE.getTuote())) {
             ostos.setMaara(1L);
             ostos.setYksikko(Yksikko.PUSSI.getYksikko());
+        } else if (dto.getRuokaAine().equals(Tuotteet.SINAPPI.getTuote())) {
+            ostos.setMaara(1L);
+            ostos.setYksikko(Yksikko.TUUBI.getYksikko());
         } else {
             ostos.setMaara(dto.getMaara());
             ostos.setYksikko(dto.getYksikko());
