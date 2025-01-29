@@ -13,6 +13,8 @@ public interface OstosListaBusiness {
 
     Optional<OstosListaEntity> updateOstosLista(Long id, OstosListaDto dto);
 
+    Optional<Boolean> setOstosListaValmis(Long id);
+
     Boolean deleteOstosLista(Long id);
 
     List<OstosListaEntity> getAllOstosLista();

@@ -24,6 +24,7 @@ public class ReseptiDto {
     private String ohje;
     @NotBlank
     private String nimi;
+    @NotNull
     private Integer ostoKerrat;
     private Instant added;
 }

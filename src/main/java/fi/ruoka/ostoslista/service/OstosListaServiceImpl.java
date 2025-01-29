@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import fi.ruoka.ostoslista.algorithms.GenerateOstosLista;
 import fi.ruoka.ostoslista.business.OstosListaBusiness;
+import fi.ruoka.ostoslista.business.ReseptiBusiness;
 import fi.ruoka.ostoslista.dto.OstosDto;
 import fi.ruoka.ostoslista.dto.OstosListaDto;
 import fi.ruoka.ostoslista.dto.ReseptiDto;
@@ -22,6 +23,9 @@ public class OstosListaServiceImpl implements OstosListaService {
 
     @Autowired
     private OstosListaBusiness business;
+
+    @Autowired
+    private ReseptiBusiness reseptiBusiness;
 
     @Autowired
     private OstosListaValidator validator;
@@ -59,6 +63,8 @@ public class OstosListaServiceImpl implements OstosListaService {
                 .map(ra -> generateOstosLista.generateOstosFromRuokaAine(ra))
                 .collect(Collectors.toList());
         ostosListaDto.setOstokset(ostokset);
+        dto.setOstoKerrat(dto.getOstoKerrat() != null ? dto.getOstoKerrat() + 1 : 1);
+        reseptiBusiness.updateResepti(dto.getId(), dto);
         return createOstosLista(ostosListaDto);
     }
 
@@ -78,6 +84,8 @@ public class OstosListaServiceImpl implements OstosListaService {
         ostokset.addAll(ostosToDto(entity.getOstokset()));
         ostosListaDto.setOstokset(ostokset);
         ostosListaDto.setId(id);
+        dto.setOstoKerrat(dto.getOstoKerrat() != null ? dto.getOstoKerrat() + 1 : 1);
+        reseptiBusiness.updateResepti(dto.getId(), dto);
         return updateOstosLista(id, ostosListaDto);
     }
 
@@ -136,6 +144,15 @@ public class OstosListaServiceImpl implements OstosListaService {
         }
         logger.logError(ValidationError.OLE105);
         return new ValidatedServiceResult<>(null, vr);
+    }
+
+    @Override
+    public ValidatedServiceResult<Boolean> setOstosListaValmis(Long id) {
+        Optional<Boolean> optOstosLista = business.setOstosListaValmis(id);
+        if (optOstosLista.isPresent()) {
+            return new ValidatedServiceResult<>(true, new ValidationResult());
+        }
+        return new ValidatedServiceResult<>(false, new ValidationResult());
     }
 
     @Override

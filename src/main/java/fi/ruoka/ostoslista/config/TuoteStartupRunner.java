@@ -1,5 +1,10 @@
 package fi.ruoka.ostoslista.config;
 
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.core.env.Environment;
@@ -11,11 +16,6 @@ import fi.ruoka.ostoslista.enums.Tuotteet;
 import fi.ruoka.ostoslista.repository.TuoteRepository;
 import fi.ruoka.ostoslista.repository.UserRepository;
 import fi.ruoka.ostoslista.util.PasswordUtil;
-
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @Component
 public class TuoteStartupRunner implements CommandLineRunner {
@@ -76,12 +76,14 @@ public class TuoteStartupRunner implements CommandLineRunner {
                     entity.setTuote(tuote.getTuote());
                     entity.setOsasto(tuote.getOsastoId());
                     entity.setYksikko(tuote.getYksikkoOstoslistassa());
+                    entity.setOstoKerrat(entity.getOstoKerrat());
                     tuoteRepository.save(entity);
                 }
             } else {
                 entity.setTuote(tuote.getTuote());
                 entity.setOsasto(tuote.getOsastoId());
                 entity.setYksikko(tuote.getYksikkoOstoslistassa());
+                entity.setOstoKerrat(0);
                 tuoteRepository.save(entity);
             }
         }

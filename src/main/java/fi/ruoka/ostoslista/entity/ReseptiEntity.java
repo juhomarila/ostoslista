@@ -4,6 +4,7 @@ import java.time.Instant;
 import java.util.List;
 
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -26,6 +27,7 @@ public class ReseptiEntity {
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "resepti", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<RuokaAineEntity> ruokaAineet;
 
+    @Column(columnDefinition = "TEXT")
     private String ohje;
 
     @NotBlank
@@ -34,5 +36,6 @@ public class ReseptiEntity {
     @NotNull
     private Instant added;
 
+    @NotNull
     private Integer ostoKerrat;
 }

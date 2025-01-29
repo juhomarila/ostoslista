@@ -1,6 +1,7 @@
 package fi.ruoka.ostoslista.business;
 
 import java.time.Instant;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
@@ -77,7 +78,7 @@ public class ReseptiBusinessImpl implements ReseptiBusiness {
                 });
                 reseptiEntity.setOhje(dto.getOhje());
                 reseptiEntity.setNimi(dto.getNimi());
-                reseptiEntity.setOstoKerrat(dto.getOstoKerrat());
+                reseptiEntity.setOstoKerrat(dto.getOstoKerrat()); // Not implemented in frontend
                 ReseptiEntity savedReseptiEntity = reseptiRepository.save(reseptiEntity);
                 return Optional.of(savedReseptiEntity);
             }
@@ -92,7 +93,9 @@ public class ReseptiBusinessImpl implements ReseptiBusiness {
 
     @Override
     public List<ReseptiEntity> getAllResepti() {
-        return reseptiRepository.findAll();
+        List<ReseptiEntity> reseptit = reseptiRepository.findAll();
+        Collections.sort(reseptit, (r1, r2) -> r2.getOstoKerrat().compareTo(r1.getOstoKerrat()));
+        return reseptit;
     }
 
     @Override

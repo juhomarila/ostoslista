@@ -129,7 +129,7 @@ public enum Tuotteet {
     PARSAKAALI("Parsakaalia", 16, Yksikko.KAPPALE.getYksikko()),
     CHILIMEDIUM("Chili medium", 16, Yksikko.KAPPALE.getYksikko()),
     CHILIEITULINEN("Chili ei tulinen", 16, Yksikko.KAPPALE.getYksikko()),
-    KIRSIKKATOMAATTI("Kirsiikkatomaatteja", 16, Yksikko.RASIA.getYksikko()),
+    KIRSIKKATOMAATTI("Kirsikkatomaatteja", 16, Yksikko.RASIA.getYksikko()),
     KIINANKAALI("Kiinankaalia", 16, Yksikko.KAPPALE.getYksikko()),
     KERÄKAALI("Keräkaalia", 16, Yksikko.KAPPALE.getYksikko()),
     VALKOKAALI("Valkokaalia", 16, Yksikko.KAPPALE.getYksikko()),

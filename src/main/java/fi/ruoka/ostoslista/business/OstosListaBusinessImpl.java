@@ -108,6 +108,7 @@ public class OstosListaBusinessImpl implements OstosListaBusiness {
                     }
                 });
                 ostosListaEntity.setNimi(dto.getNimi());
+                ostosListaEntity.setValmis(dto.isValmis());
                 repository.save(ostosListaEntity);
                 return Optional.of(ostosListaEntity);
             }
@@ -119,6 +120,18 @@ public class OstosListaBusinessImpl implements OstosListaBusiness {
             e.printStackTrace();
             return Optional.empty();
         }
+    }
+
+    @Override
+    public Optional<Boolean> setOstosListaValmis(Long id) {
+        Optional<OstosListaEntity> optOstosLista = repository.findById(id);
+        if (optOstosLista.isPresent()) {
+            OstosListaEntity ostosLista = optOstosLista.get();
+            ostosLista.setValmis(true);
+            repository.save(ostosLista);
+            return Optional.of(true);
+        }
+        return Optional.empty();
     }
 
     @Override

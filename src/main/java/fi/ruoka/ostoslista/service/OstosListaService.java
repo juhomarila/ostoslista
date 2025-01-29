@@ -12,6 +12,8 @@ public interface OstosListaService {
 
     ValidatedServiceResult<OstosListaDto> updateOstosLista(Long id, OstosListaDto dto);
 
+    ValidatedServiceResult<Boolean> setOstosListaValmis(Long id);
+
     ValidatedServiceResult<Boolean> deleteOstosLista(Long id);
 
     ValidatedServiceResult<List<OstosListaDto>> getAllOstosLista();

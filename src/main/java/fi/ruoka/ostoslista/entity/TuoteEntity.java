@@ -27,4 +27,7 @@ public class TuoteEntity {
 
     @NotBlank
     private String yksikko;
+
+    @NotNull
+    private Integer ostoKerrat;
 }

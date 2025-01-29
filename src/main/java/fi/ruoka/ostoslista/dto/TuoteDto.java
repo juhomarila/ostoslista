@@ -20,4 +20,6 @@ public class TuoteDto {
     private double hinta;
     @NotBlank
     private String yksikko;
+    @NotNull
+    private Integer ostoKerrat;
 }

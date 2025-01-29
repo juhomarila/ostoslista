@@ -84,9 +84,8 @@ public class OstosListaController {
                 logger.getLogStart("getOstosListaById");
                 var vsr = ostosListaService.getOstosListaById(id);
                 logger.getLogEnd("getOstosListaById");
-                return vsr.getVr().validated ? new ResponseEntity<>(vsr.getT(), HttpStatus.OK)
-                                : new ResponseEntity<>(vsr.getVr().getErrorMsg(),
-                                                vsr.getVr().validated ? HttpStatus.BAD_REQUEST : HttpStatus.NOT_FOUND);
+                return vsr.getVr().validated ? new ResponseEntity<>(HttpStatus.OK)
+                                : new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
         @PutMapping("/{id}")
@@ -94,6 +93,16 @@ public class OstosListaController {
                 logger.putLogStart("updateOstosLista");
                 var vsr = ostosListaService.updateOstosLista(id, dto);
                 logger.putLogEnd("updateOstosLista");
+                return vsr.getVr().validated ? new ResponseEntity<>(vsr.getT(), HttpStatus.OK)
+                                : new ResponseEntity<>(vsr.getVr().getErrorMsg(),
+                                                vsr.getVr().validated ? HttpStatus.BAD_REQUEST : HttpStatus.NOT_FOUND);
+        }
+
+        @PutMapping("/{id}/valmis")
+        public ResponseEntity<?> setOstosListaValmis(@PathVariable Long id) {
+                logger.putLogStart("setOstosListaValmis");
+                var vsr = ostosListaService.setOstosListaValmis(id);
+                logger.putLogEnd("setOstosListaValmis");
                 return vsr.getVr().validated ? new ResponseEntity<>(vsr.getT(), HttpStatus.OK)
                                 : new ResponseEntity<>(vsr.getVr().getErrorMsg(),
                                                 vsr.getVr().validated ? HttpStatus.BAD_REQUEST : HttpStatus.NOT_FOUND);
