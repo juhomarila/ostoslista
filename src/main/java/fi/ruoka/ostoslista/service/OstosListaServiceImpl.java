@@ -148,8 +148,8 @@ public class OstosListaServiceImpl implements OstosListaService {
 
     @Override
     public ValidatedServiceResult<Boolean> setOstosListaValmis(Long id) {
-        Optional<Boolean> optOstosLista = business.setOstosListaValmis(id);
-        if (optOstosLista.isPresent()) {
+        Optional<Boolean> success = business.setOstosListaValmis(id);
+        if (success.isPresent()) {
             return new ValidatedServiceResult<>(true, new ValidationResult());
         }
         return new ValidatedServiceResult<>(false, new ValidationResult());

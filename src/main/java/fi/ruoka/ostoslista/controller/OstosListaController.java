@@ -61,7 +61,8 @@ public class OstosListaController {
         }
 
         @PostMapping("/resepti/{id}")
-        public ResponseEntity<?> reseptiToOstosLista(@Valid @RequestBody ReseptiDto dto, @PathVariable Long id) {
+        public ResponseEntity<?> reseptiToExistingOstosLista(@Valid @RequestBody ReseptiDto dto,
+                        @PathVariable Long id) {
                 logger.postLogStart("reseptiToExistingOstosLista");
                 var vsr = ostosListaService.reseptiToExistingOstosLista(dto, id);
                 logger.postLogEnd("reseptiToExistingOstosLista");
@@ -103,9 +104,8 @@ public class OstosListaController {
                 logger.putLogStart("setOstosListaValmis");
                 var vsr = ostosListaService.setOstosListaValmis(id);
                 logger.putLogEnd("setOstosListaValmis");
-                return vsr.getVr().validated ? new ResponseEntity<>(vsr.getT(), HttpStatus.OK)
-                                : new ResponseEntity<>(vsr.getVr().getErrorMsg(),
-                                                vsr.getVr().validated ? HttpStatus.BAD_REQUEST : HttpStatus.NOT_FOUND);
+                return vsr.getT().booleanValue() ? new ResponseEntity<>(HttpStatus.OK)
+                                : new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
         @DeleteMapping("/{id}")

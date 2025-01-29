@@ -16,9 +16,11 @@ import fi.ruoka.ostoslista.dto.OstosDto;
 import fi.ruoka.ostoslista.dto.OstosListaDto;
 import fi.ruoka.ostoslista.entity.OstosEntity;
 import fi.ruoka.ostoslista.entity.OstosListaEntity;
+import fi.ruoka.ostoslista.entity.TuoteEntity;
 import fi.ruoka.ostoslista.enums.Tuotteet;
 import fi.ruoka.ostoslista.repository.OstosListaRepository;
 import fi.ruoka.ostoslista.repository.OstosRepository;
+import fi.ruoka.ostoslista.repository.TuoteRepository;
 
 @Service
 public class OstosListaBusinessImpl implements OstosListaBusiness {
@@ -29,6 +31,9 @@ public class OstosListaBusinessImpl implements OstosListaBusiness {
     @Autowired
     private OstosRepository ostosRepository;
 
+    @Autowired
+    private TuoteRepository tuoteRepository;
+
     private static final Logger logger = LoggerFactory.getLogger(OstosListaBusinessImpl.class);
 
     @Override
@@ -38,7 +43,8 @@ public class OstosListaBusinessImpl implements OstosListaBusiness {
 
     @Override
     public List<OstosListaEntity> getAllOstosLista() {
-        return repository.findAll();
+        return repository.findByValmisFalse();
+        // return repository.findAll();
     }
 
     @Override
@@ -64,7 +70,8 @@ public class OstosListaBusinessImpl implements OstosListaBusiness {
                 Iterator<OstosEntity> iterator = ostosListaEntity.getOstokset().iterator();
                 while (iterator.hasNext()) {
                     OstosEntity ostos = iterator.next();
-                    if (dto.getOstokset().stream().noneMatch(o -> o.getId() != null && o.getId().equals(ostos.getId()))) {
+                    if (dto.getOstokset().stream()
+                            .noneMatch(o -> o.getId() != null && o.getId().equals(ostos.getId()))) {
                         iterator.remove();
                         ostosRepository.delete(ostos);
                     }
@@ -86,10 +93,12 @@ public class OstosListaBusinessImpl implements OstosListaBusiness {
                                 .orElse(null);
                         ostos.setOsastoId(matchingTuote != null ? matchingTuote.getOsastoId() : 0);
                     } else if (!ostosListaEntity.getOstokset().isEmpty()
-                            && ostosListaEntity.getOstokset().stream().anyMatch(o -> o.getTuote().equals(ostosDto.getTuote())
-                            && o.getYksikko().equals(ostosDto.getYksikko()))) {
+                            && ostosListaEntity.getOstokset().stream()
+                                    .anyMatch(o -> o.getTuote().equals(ostosDto.getTuote())
+                                            && o.getYksikko().equals(ostosDto.getYksikko()))) {
                         OstosEntity ostos = ostosListaEntity.getOstokset().stream()
-                                .filter(o -> o.getTuote().equals(ostosDto.getTuote()) && o.getYksikko().equals(ostosDto.getYksikko()))
+                                .filter(o -> o.getTuote().equals(ostosDto.getTuote())
+                                        && o.getYksikko().equals(ostosDto.getYksikko()))
                                 .findFirst().get();
                         ostos.setMaara(ostos.getMaara() + ostosDto.getMaara());
                     } else {
@@ -128,6 +137,16 @@ public class OstosListaBusinessImpl implements OstosListaBusiness {
         if (optOstosLista.isPresent()) {
             OstosListaEntity ostosLista = optOstosLista.get();
             ostosLista.setValmis(true);
+            ostosLista.getOstokset().forEach(ostos -> {
+                if (ostos.getOstettu()) {
+                    Optional<TuoteEntity> tuote = tuoteRepository.findByTuote(ostos.getTuote());
+                    if (tuote.isPresent()) {
+                        TuoteEntity tuoteEntity = tuote.get();
+                        tuoteEntity.setOstoKerrat(tuoteEntity.getOstoKerrat() + 1);
+                        tuoteRepository.save(tuoteEntity);
+                    }
+                }
+            });
             repository.save(ostosLista);
             return Optional.of(true);
         }
