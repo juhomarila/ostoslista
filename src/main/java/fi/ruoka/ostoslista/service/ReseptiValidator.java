@@ -60,9 +60,6 @@ public class ReseptiValidator {
                 if (ra.getYksikko() == null || ra.getYksikko().length() < 1) {
                     errorMsg.add(ValidationError.VE001 + ".yksikko");
                 }
-                if (isUpdate && ra.getId() == null) {
-                    errorMsg.add(ValidationError.VE001 + ".id");
-                }
             });
         }
     }

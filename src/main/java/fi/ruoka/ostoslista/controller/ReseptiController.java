@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.RestController;
 import fi.ruoka.ostoslista.dto.ReseptiDto;
 import fi.ruoka.ostoslista.logging.OstosListaLogger;
 import fi.ruoka.ostoslista.service.ReseptiService;
-import jakarta.annotation.security.PermitAll;
 import jakarta.validation.Valid;
 
 @RestController
@@ -46,7 +45,6 @@ public class ReseptiController {
     }
 
     @GetMapping
-    @PermitAll
     public ResponseEntity<List<ReseptiDto>> getAllResepti() {
         logger.getLogStart("getAllResepti");
         var vsr = reseptiService.getAllResepti();
