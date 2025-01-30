@@ -36,4 +36,6 @@ public class OstosListaEntity {
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "ostosLista", cascade = CascadeType.ALL, orphanRemoval = true)
     @OrderBy("osastoId ASC, tuote ASC")
     private List<OstosEntity> ostokset;
+
+    private Long reseptiId;
 }

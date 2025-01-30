@@ -22,4 +22,5 @@ public class OstosListaDto {
     @NotNull
     private boolean valmis;
     private List<OstosDto> ostokset;
+    private Long reseptiId;
 }

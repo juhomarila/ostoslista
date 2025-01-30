@@ -27,6 +27,9 @@ public class ReseptiEntity {
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "resepti", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<RuokaAineEntity> ruokaAineet;
 
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "resepti", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ReseptiOstoEntity> reseptiOstot;
+
     @Column(columnDefinition = "TEXT")
     private String ohje;
 

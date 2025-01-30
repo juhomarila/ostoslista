@@ -16,10 +16,16 @@ import fi.ruoka.ostoslista.dto.OstosDto;
 import fi.ruoka.ostoslista.dto.OstosListaDto;
 import fi.ruoka.ostoslista.entity.OstosEntity;
 import fi.ruoka.ostoslista.entity.OstosListaEntity;
+import fi.ruoka.ostoslista.entity.ReseptiEntity;
+import fi.ruoka.ostoslista.entity.ReseptiOstoEntity;
 import fi.ruoka.ostoslista.entity.TuoteEntity;
+import fi.ruoka.ostoslista.entity.TuoteOstoEntity;
 import fi.ruoka.ostoslista.enums.Tuotteet;
 import fi.ruoka.ostoslista.repository.OstosListaRepository;
 import fi.ruoka.ostoslista.repository.OstosRepository;
+import fi.ruoka.ostoslista.repository.ReseptiOstoRepository;
+import fi.ruoka.ostoslista.repository.ReseptiRepository;
+import fi.ruoka.ostoslista.repository.TuoteOstoRepository;
 import fi.ruoka.ostoslista.repository.TuoteRepository;
 
 @Service
@@ -33,6 +39,15 @@ public class OstosListaBusinessImpl implements OstosListaBusiness {
 
     @Autowired
     private TuoteRepository tuoteRepository;
+
+    @Autowired
+    private TuoteOstoRepository tuoteOstoRepository;
+
+    @Autowired
+    private ReseptiRepository reseptiRepository;
+
+    @Autowired
+    private ReseptiOstoRepository reseptiOstoRepository;
 
     private static final Logger logger = LoggerFactory.getLogger(OstosListaBusinessImpl.class);
 
@@ -144,9 +159,25 @@ public class OstosListaBusinessImpl implements OstosListaBusiness {
                         TuoteEntity tuoteEntity = tuote.get();
                         tuoteEntity.setOstoKerrat(tuoteEntity.getOstoKerrat() + 1);
                         tuoteRepository.save(tuoteEntity);
+                        TuoteOstoEntity tuoteOstoEntity = new TuoteOstoEntity();
+                        tuoteOstoEntity.setOstoAika(Instant.now());
+                        tuoteOstoEntity.setTuote(tuoteEntity);
+                        tuoteOstoRepository.save(tuoteOstoEntity);
                     }
                 }
             });
+            if (ostosLista.getReseptiId() != null) {
+                Optional<ReseptiEntity> optEntity = reseptiRepository.findById(ostosLista.getReseptiId());
+                if (optEntity.isPresent()) {
+                    ReseptiEntity reseptiEntity = optEntity.get();
+                    reseptiEntity.setOstoKerrat(reseptiEntity.getOstoKerrat() + 1);
+                    reseptiRepository.save(reseptiEntity);
+                    ReseptiOstoEntity reseptiOstoEntity = new ReseptiOstoEntity();
+                    reseptiOstoEntity.setOstoAika(Instant.now());
+                    reseptiOstoEntity.setResepti(reseptiEntity);
+                    reseptiOstoRepository.save(reseptiOstoEntity);
+                }
+            }
             repository.save(ostosLista);
             return Optional.of(true);
         }
@@ -166,6 +197,9 @@ public class OstosListaBusinessImpl implements OstosListaBusiness {
     private OstosListaEntity saveOstosLista(OstosListaEntity ostosLista, OstosListaDto dto) {
         ostosLista.setPaiva(Instant.now());
         ostosLista.setNimi(dto.getNimi());
+        if (dto.getReseptiId() != null) {
+            ostosLista.setReseptiId(dto.getReseptiId());
+        }
         if (dto.getOstokset() != null) {
             List<OstosEntity> ostokset = dto.getOstokset().stream()
                     .map(this::ostosToEntity)

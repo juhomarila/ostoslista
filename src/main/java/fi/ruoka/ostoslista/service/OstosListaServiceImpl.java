@@ -63,8 +63,7 @@ public class OstosListaServiceImpl implements OstosListaService {
                 .map(ra -> generateOstosLista.generateOstosFromRuokaAine(ra))
                 .collect(Collectors.toList());
         ostosListaDto.setOstokset(ostokset);
-        dto.setOstoKerrat(dto.getOstoKerrat() != null ? dto.getOstoKerrat() + 1 : 1);
-        reseptiBusiness.updateResepti(dto.getId(), dto);
+        ostosListaDto.setReseptiId(dto.getId());
         return createOstosLista(ostosListaDto);
     }
 
@@ -83,9 +82,8 @@ public class OstosListaServiceImpl implements OstosListaService {
                 .collect(Collectors.toList());
         ostokset.addAll(ostosToDto(entity.getOstokset()));
         ostosListaDto.setOstokset(ostokset);
+        ostosListaDto.setReseptiId(dto.getId());
         ostosListaDto.setId(id);
-        dto.setOstoKerrat(dto.getOstoKerrat() != null ? dto.getOstoKerrat() + 1 : 1);
-        reseptiBusiness.updateResepti(dto.getId(), dto);
         return updateOstosLista(id, ostosListaDto);
     }
 
@@ -182,6 +180,7 @@ public class OstosListaServiceImpl implements OstosListaService {
         dto.setNimi(entity.getNimi());
         dto.setPaiva(entity.getPaiva());
         dto.setOstokset(ostosToDto(entity.getOstokset()));
+        dto.setReseptiId(entity.getReseptiId());
 
         return dto;
     }
