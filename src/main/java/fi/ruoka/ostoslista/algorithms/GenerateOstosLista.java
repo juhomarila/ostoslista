@@ -113,7 +113,8 @@ public class GenerateOstosLista {
                 || dto.getRuokaAine().equals(Tuotteet.NAUDANFONDI.getTuote())
                 || dto.getRuokaAine().equals(Tuotteet.KASVISLIEMIKUUTIO.getTuote())
                 || dto.getRuokaAine().equals(Tuotteet.NAUDANLIEMIKUUTIO.getTuote())
-                || dto.getRuokaAine().equals(Tuotteet.KANALIEMIKUUTIO.getTuote())) {
+                || dto.getRuokaAine().equals(Tuotteet.KANALIEMIKUUTIO.getTuote())
+                || dto.getRuokaAine().equals(Tuotteet.SUOLA.getTuote())) {
             ostos.setMaara(1L);
             ostos.setYksikko(Yksikko.PAKETTI.getYksikko());
         } else if (dto.getRuokaAine().equals(Tuotteet.OREGANO.getTuote())

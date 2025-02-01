@@ -41,4 +41,6 @@ public class ReseptiEntity {
 
     @NotNull
     private Integer ostoKerrat;
+
+    private String originalLink;
 }

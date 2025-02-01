@@ -110,10 +110,10 @@ public class OstosListaBusinessImpl implements OstosListaBusiness {
                     } else if (!ostosListaEntity.getOstokset().isEmpty()
                             && ostosListaEntity.getOstokset().stream()
                                     .anyMatch(o -> o.getTuote().equals(ostosDto.getTuote())
-                                            && o.getYksikko().equals(ostosDto.getYksikko()))) {
+                                    && o.getYksikko().equals(ostosDto.getYksikko()))) {
                         OstosEntity ostos = ostosListaEntity.getOstokset().stream()
                                 .filter(o -> o.getTuote().equals(ostosDto.getTuote())
-                                        && o.getYksikko().equals(ostosDto.getYksikko()))
+                                && o.getYksikko().equals(ostosDto.getYksikko()))
                                 .findFirst().get();
                         ostos.setMaara(ostos.getMaara() + ostosDto.getMaara());
                     } else {
@@ -133,6 +133,7 @@ public class OstosListaBusinessImpl implements OstosListaBusiness {
                 });
                 ostosListaEntity.setNimi(dto.getNimi());
                 ostosListaEntity.setValmis(dto.isValmis());
+                ostosListaEntity.setReseptiId(dto.getReseptiId());
                 repository.save(ostosListaEntity);
                 return Optional.of(ostosListaEntity);
             }
@@ -167,16 +168,18 @@ public class OstosListaBusinessImpl implements OstosListaBusiness {
                 }
             });
             if (ostosLista.getReseptiId() != null) {
-                Optional<ReseptiEntity> optEntity = reseptiRepository.findById(ostosLista.getReseptiId());
-                if (optEntity.isPresent()) {
-                    ReseptiEntity reseptiEntity = optEntity.get();
-                    reseptiEntity.setOstoKerrat(reseptiEntity.getOstoKerrat() + 1);
-                    reseptiRepository.save(reseptiEntity);
-                    ReseptiOstoEntity reseptiOstoEntity = new ReseptiOstoEntity();
-                    reseptiOstoEntity.setOstoAika(Instant.now());
-                    reseptiOstoEntity.setResepti(reseptiEntity);
-                    reseptiOstoRepository.save(reseptiOstoEntity);
-                }
+                ostosLista.getReseptiId().forEach(reseptiId -> {
+                    Optional<ReseptiEntity> optEntity = reseptiRepository.findById(reseptiId);
+                    if (optEntity.isPresent()) {
+                        ReseptiEntity reseptiEntity = optEntity.get();
+                        reseptiEntity.setOstoKerrat(reseptiEntity.getOstoKerrat() + 1);
+                        reseptiRepository.save(reseptiEntity);
+                        ReseptiOstoEntity reseptiOstoEntity = new ReseptiOstoEntity();
+                        reseptiOstoEntity.setOstoAika(Instant.now());
+                        reseptiOstoEntity.setResepti(reseptiEntity);
+                        reseptiOstoRepository.save(reseptiOstoEntity);
+                    }
+                });
             }
             repository.save(ostosLista);
             return Optional.of(true);

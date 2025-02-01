@@ -27,4 +27,5 @@ public class ReseptiDto {
     @NotNull
     private Integer ostoKerrat;
     private Instant added;
+    private String originalLink;
 }

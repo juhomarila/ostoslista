@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -65,7 +66,7 @@ public class OstosListaServiceImpl implements OstosListaService {
                 .map(ra -> generateOstosLista.generateOstosFromRuokaAine(ra))
                 .collect(Collectors.toList());
         ostosListaDto.setOstokset(ostokset);
-        ostosListaDto.setReseptiId(dto.getId());
+        ostosListaDto.setReseptiId(Arrays.asList(dto.getId()));
         return createOstosLista(ostosListaDto);
     }
 
@@ -85,7 +86,9 @@ public class OstosListaServiceImpl implements OstosListaService {
                 .collect(Collectors.toList());
         ostokset.addAll(ostosToDto(entity.getOstokset()));
         ostosListaDto.setOstokset(ostokset);
-        ostosListaDto.setReseptiId(dto.getId());
+        List<Long> reseptiIds = entity.getReseptiId();
+        reseptiIds.add(dto.getId());
+        ostosListaDto.setReseptiId(reseptiIds);
         ostosListaDto.setId(id);
         return updateOstosLista(id, ostosListaDto);
     }

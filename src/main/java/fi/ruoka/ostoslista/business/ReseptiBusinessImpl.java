@@ -53,7 +53,7 @@ public class ReseptiBusinessImpl implements ReseptiBusiness {
                 Iterator<RuokaAineEntity> iterator = reseptiEntity.getRuokaAineet().iterator();
                 while (iterator.hasNext()) {
                     RuokaAineEntity ruokaAine = iterator.next();
-                    if (dto.getRuokaAineet().stream().noneMatch(ra -> ra.getId().equals(ruokaAine.getId()))) {
+                    if (dto.getRuokaAineet().stream().noneMatch(ra -> ra.getId() != null && ra.getId().equals(ruokaAine.getId()))) {
                         iterator.remove();
                         ruokaAineRepository.delete(ruokaAine);
                     }
@@ -79,6 +79,9 @@ public class ReseptiBusinessImpl implements ReseptiBusiness {
                 reseptiEntity.setOhje(dto.getOhje());
                 reseptiEntity.setNimi(dto.getNimi());
                 reseptiEntity.setOstoKerrat(dto.getOstoKerrat()); // Not implemented in frontend
+                if (dto.getOriginalLink() != null) {
+                    reseptiEntity.setOriginalLink(dto.getOriginalLink());
+                }
                 ReseptiEntity savedReseptiEntity = reseptiRepository.save(reseptiEntity);
                 return Optional.of(savedReseptiEntity);
             }
@@ -121,6 +124,9 @@ public class ReseptiBusinessImpl implements ReseptiBusiness {
         ruokaAineet.forEach(ruokaAine -> {
             ruokaAine.setResepti(resepti);
         });
+        if (dto.getOriginalLink() != null) {
+            resepti.setOriginalLink(dto.getOriginalLink());
+        }
         reseptiRepository.save(resepti);
         return resepti;
     }
