@@ -90,6 +90,7 @@ public class GenerateOstosLista {
             ostos.setYksikko(Yksikko.PUSSI.getYksikko());
         } else if (dto.getRuokaAine().equals(Tuotteet.HUNAJA.getTuote())
                 || dto.getRuokaAine().equals(Tuotteet.SIIRAPPI.getTuote())
+                || dto.getRuokaAine().equals(Tuotteet.TUMMASIIRAPPI.getTuote())
                 || dto.getRuokaAine().equals(Tuotteet.KETSUPPI.getTuote())
                 || dto.getRuokaAine().equals(Tuotteet.BBQKASTIKE.getTuote())
                 || dto.getRuokaAine().equals(Tuotteet.SRIRACHA.getTuote())
@@ -103,7 +104,8 @@ public class GenerateOstosLista {
                 || dto.getRuokaAine().equals(Tuotteet.WORCHESTERINKASTIKE.getTuote())
                 || dto.getRuokaAine().equals(Tuotteet.OLIIVIÖLJY.getTuote())
                 || dto.getRuokaAine().equals(Tuotteet.SEESAMIÖLJY.getTuote())
-                || dto.getRuokaAine().equals(Tuotteet.RUOKAOLJY.getTuote())) {
+                || dto.getRuokaAine().equals(Tuotteet.RUOKAOLJY.getTuote())
+                || dto.getRuokaAine().equals(Tuotteet.CHILIKASTIKE.getTuote())) {
             ostos.setMaara(1L);
             ostos.setYksikko(Yksikko.PULLO.getYksikko());
         } else if (dto.getRuokaAine().equals(Tuotteet.KASVISFONDI.getTuote())
@@ -131,12 +133,17 @@ public class GenerateOstosLista {
                 || dto.getRuokaAine().equals(Tuotteet.MAUSTEPIPPURIKOKO.getTuote())
                 || dto.getRuokaAine().equals(Tuotteet.MAUSTEPIPPURIJAUHETTU.getTuote())
                 || dto.getRuokaAine().equals(Tuotteet.KORIANTERINSIEMEN.getTuote())
-                || dto.getRuokaAine().equals(Tuotteet.CHILIJAUHE.getTuote())) {
+                || dto.getRuokaAine().equals(Tuotteet.CHILIJAUHE.getTuote())
+                || dto.getRuokaAine().equals(Tuotteet.MAAPÄHKINÄ.getTuote())) {
             ostos.setMaara(1L);
             ostos.setYksikko(Yksikko.PUSSI.getYksikko());
         } else if (dto.getRuokaAine().equals(Tuotteet.SINAPPI.getTuote())) {
             ostos.setMaara(1L);
             ostos.setYksikko(Yksikko.TUUBI.getYksikko());
+        } else if (dto.getRuokaAine().equals(Tuotteet.KANANMUNA.getTuote())) {
+            ostos.setMaara(1L);
+            ostos.setTuote(Tuotteet.KANANMUNAKENNO.getTuote());
+            ostos.setYksikko(Yksikko.KAPPALE.getYksikko());
         } else {
             ostos.setMaara(dto.getMaara());
             ostos.setYksikko(dto.getYksikko());

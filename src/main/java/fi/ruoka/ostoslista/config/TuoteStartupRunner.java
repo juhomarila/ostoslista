@@ -1,10 +1,5 @@
 package fi.ruoka.ostoslista.config;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.core.env.Environment;
@@ -60,11 +55,7 @@ public class TuoteStartupRunner implements CommandLineRunner {
     }
 
     private void synchronizeTuoteRepository() {
-        List<TuoteEntity> currentEntities = tuoteRepository.findAll();
-
-        Set<String> enumTuotteet = new HashSet<>();
         for (Tuotteet tuote : Tuotteet.values()) {
-            enumTuotteet.add(tuote.getTuote());
             TuoteEntity entity = tuoteRepository.findByTuote(tuote.getTuote())
                     .orElse(new TuoteEntity());
 
@@ -87,12 +78,6 @@ public class TuoteStartupRunner implements CommandLineRunner {
                 tuoteRepository.save(entity);
             }
         }
-
-        List<TuoteEntity> entitiesToRemove = currentEntities.stream()
-                .filter(entity -> !enumTuotteet.contains(entity.getTuote()))
-                .collect(Collectors.toList());
-
-        tuoteRepository.deleteAll(entitiesToRemove);
 
         System.out.println("TuoteEntity table synchronized successfully!");
     }

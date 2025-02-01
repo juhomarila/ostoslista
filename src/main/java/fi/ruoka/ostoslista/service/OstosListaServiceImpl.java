@@ -16,6 +16,7 @@ import fi.ruoka.ostoslista.dto.OstosListaDto;
 import fi.ruoka.ostoslista.dto.ReseptiDto;
 import fi.ruoka.ostoslista.entity.OstosEntity;
 import fi.ruoka.ostoslista.entity.OstosListaEntity;
+import fi.ruoka.ostoslista.enums.Tuotteet;
 import fi.ruoka.ostoslista.logging.OstosListaLogger;
 
 @Service
@@ -59,6 +60,7 @@ public class OstosListaServiceImpl implements OstosListaService {
     public ValidatedServiceResult<OstosListaDto> reseptiToOstosLista(ReseptiDto dto) {
         OstosListaDto ostosListaDto = new OstosListaDto();
         ostosListaDto.setNimi("Ostoslista");
+        dto.getRuokaAineet().removeIf(ra -> ra.getRuokaAine().equals(Tuotteet.VESI.getTuote()));
         List<OstosDto> ostokset = dto.getRuokaAineet().stream()
                 .map(ra -> generateOstosLista.generateOstosFromRuokaAine(ra))
                 .collect(Collectors.toList());
@@ -77,6 +79,7 @@ public class OstosListaServiceImpl implements OstosListaService {
         }
         OstosListaEntity entity = ostosListaEntity.get();
         ostosListaDto.setNimi(entity.getNimi());
+        dto.getRuokaAineet().removeIf(ra -> ra.getRuokaAine().equals(Tuotteet.VESI.getTuote()));
         List<OstosDto> ostokset = dto.getRuokaAineet().stream()
                 .map(ra -> generateOstosLista.generateOstosFromRuokaAine(ra))
                 .collect(Collectors.toList());
