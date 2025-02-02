@@ -24,6 +24,7 @@ services:
     volumes:
       - ./src:/usr/src/app/src
       - ./target:/usr/src/app/target
+      - ./firebase.json:/usr/src/app/firebase.json
     env_file: ".env"
     environment:
       db: ${db}
@@ -32,3 +33,4 @@ services:
       secret: ${secret} 
       userEntity: ${userEntity}
       userEntityPass: ${userEntityPass}
+      FIREBASE_CONFIG_PATH: ${firebaseConfigFile}

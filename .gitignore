@@ -41,3 +41,5 @@ data/
 .env
 
 todoo.txt
+
+firebase.json
