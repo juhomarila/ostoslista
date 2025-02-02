@@ -104,7 +104,7 @@ public class OstosListaController {
                 logger.putLogStart("setOstosListaValmis");
                 var vsr = ostosListaService.setOstosListaValmis(id);
                 logger.putLogEnd("setOstosListaValmis");
-                return vsr.getT().booleanValue() ? new ResponseEntity<>(HttpStatus.OK)
+                return vsr.getT() ? new ResponseEntity<>(HttpStatus.OK)
                                 : new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 

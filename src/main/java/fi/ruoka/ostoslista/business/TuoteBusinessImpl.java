@@ -44,6 +44,7 @@ public class TuoteBusinessImpl implements TuoteBusiness {
             }
             tuote.setYksikko(dto.getYksikko());
             tuote.setOstoKerrat(0);
+            tuote.setKplOstettu(0);
             tuote = tuoteRepository.save(tuote);
             return Optional.of(tuote);
         } catch (Exception e) {

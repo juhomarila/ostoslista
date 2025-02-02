@@ -68,6 +68,7 @@ public class TuoteStartupRunner implements CommandLineRunner {
                     entity.setOsasto(tuote.getOsastoId());
                     entity.setYksikko(tuote.getYksikkoOstoslistassa());
                     entity.setOstoKerrat(entity.getOstoKerrat());
+                    entity.setKplOstettu(0);
                     tuoteRepository.save(entity);
                 }
             } else {
@@ -75,6 +76,7 @@ public class TuoteStartupRunner implements CommandLineRunner {
                 entity.setOsasto(tuote.getOsastoId());
                 entity.setYksikko(tuote.getYksikkoOstoslistassa());
                 entity.setOstoKerrat(0);
+                entity.setKplOstettu(0);
                 tuoteRepository.save(entity);
             }
         }

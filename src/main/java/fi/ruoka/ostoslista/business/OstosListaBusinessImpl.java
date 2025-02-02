@@ -159,6 +159,7 @@ public class OstosListaBusinessImpl implements OstosListaBusiness {
                     if (tuote.isPresent()) {
                         TuoteEntity tuoteEntity = tuote.get();
                         tuoteEntity.setOstoKerrat(tuoteEntity.getOstoKerrat() + 1);
+                        tuoteEntity.setKplOstettu(tuoteEntity.getKplOstettu() != null ? tuoteEntity.getKplOstettu() + ostos.getMaara().intValue() : ostos.getMaara().intValue());
                         tuoteRepository.save(tuoteEntity);
                         TuoteOstoEntity tuoteOstoEntity = new TuoteOstoEntity();
                         tuoteOstoEntity.setOstoAika(Instant.now());

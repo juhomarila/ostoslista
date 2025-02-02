@@ -135,6 +135,7 @@ public class TuoteServiceImpl implements TuoteService {
         dto.setHinta(tuote.getHinta());
         dto.setYksikko(tuote.getYksikko());
         dto.setOstoKerrat(tuote.getOstoKerrat());
+        dto.setKplOstettu(tuote.getKplOstettu());
         return dto;
     }
 

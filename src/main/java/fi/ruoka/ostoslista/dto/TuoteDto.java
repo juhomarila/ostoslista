@@ -22,4 +22,5 @@ public class TuoteDto {
     private String yksikko;
     @NotNull
     private Integer ostoKerrat;
+    private Integer kplOstettu;
 }

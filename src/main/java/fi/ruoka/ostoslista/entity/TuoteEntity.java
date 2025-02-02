@@ -38,4 +38,6 @@ public class TuoteEntity {
 
     @NotNull
     private Integer ostoKerrat;
+
+    private Integer kplOstettu;
 }
