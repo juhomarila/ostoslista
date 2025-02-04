@@ -1,6 +1,7 @@
 package fi.ruoka.ostoslista.dto;
 
-import jakarta.validation.constraints.NotBlank;
+import java.time.Instant;
+
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -10,9 +11,7 @@ import lombok.ToString;
 @Setter
 @NoArgsConstructor
 @ToString
-public class NotificationDto {
-    @NotBlank
-    private String title;
-    @NotBlank
-    private String body;
+public class ReseptiOstoDto {
+    private Long id;
+    private Instant ostoAika;
 }

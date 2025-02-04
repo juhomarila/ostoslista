@@ -27,4 +27,3 @@ services:
       secret: ${secret} 
       userEntity: ${userEntity}
       userEntityPass: ${userEntityPass}
-      FIREBASE_CONFIG_PATH: ${firebaseConfigFile}

@@ -28,4 +28,5 @@ public class ReseptiDto {
     private Integer ostoKerrat;
     private Instant added;
     private String originalLink;
+    private List<ReseptiOstoDto> reseptiOstot;
 }
