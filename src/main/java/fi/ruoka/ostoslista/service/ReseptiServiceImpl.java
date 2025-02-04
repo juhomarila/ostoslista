@@ -6,11 +6,13 @@ import java.util.ArrayList;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.convert.DtoInstantiatingConverter;
 import org.springframework.stereotype.Service;
 
 import fi.ruoka.ostoslista.business.ReseptiBusiness;
 import fi.ruoka.ostoslista.business.ReseptiError;
 import fi.ruoka.ostoslista.dto.ReseptiDto;
+import fi.ruoka.ostoslista.dto.ReseptiOstoDto;
 import fi.ruoka.ostoslista.dto.RuokaAineDto;
 import fi.ruoka.ostoslista.entity.ReseptiEntity;
 import fi.ruoka.ostoslista.entity.RuokaAineEntity;
@@ -141,6 +143,14 @@ public class ReseptiServiceImpl implements ReseptiService {
         reseptiDto.setRuokaAineet(ruokaAineetToDto(resepti.getRuokaAineet()));
         if (resepti.getOriginalLink() != null) {
             reseptiDto.setOriginalLink(resepti.getOriginalLink());
+        }
+        if (resepti.getReseptiOstot() != null) {
+            reseptiDto.setReseptiOstot(resepti.getReseptiOstot().stream().map(osto -> {
+                ReseptiOstoDto ostoDto = new ReseptiOstoDto();
+                ostoDto.setId(osto.getId());
+                ostoDto.setOstoAika(osto.getOstoAika());
+                return ostoDto;
+            }).collect(Collectors.toList()));
         }
 
         return reseptiDto;
