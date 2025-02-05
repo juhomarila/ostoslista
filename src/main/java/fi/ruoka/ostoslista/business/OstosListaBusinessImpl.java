@@ -1,7 +1,6 @@
 package fi.ruoka.ostoslista.business;
 
 import java.time.Instant;
-import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
@@ -20,7 +19,6 @@ import fi.ruoka.ostoslista.entity.ReseptiEntity;
 import fi.ruoka.ostoslista.entity.ReseptiOstoEntity;
 import fi.ruoka.ostoslista.entity.TuoteEntity;
 import fi.ruoka.ostoslista.entity.TuoteOstoEntity;
-import fi.ruoka.ostoslista.enums.Tuotteet;
 import fi.ruoka.ostoslista.repository.OstosListaRepository;
 import fi.ruoka.ostoslista.repository.OstosRepository;
 import fi.ruoka.ostoslista.repository.ReseptiOstoRepository;
@@ -59,7 +57,6 @@ public class OstosListaBusinessImpl implements OstosListaBusiness {
     @Override
     public List<OstosListaEntity> getAllOstosLista() {
         return repository.findByValmisFalse();
-        // return repository.findAll();
     }
 
     @Override
@@ -102,11 +99,8 @@ public class OstosListaBusinessImpl implements OstosListaBusiness {
                         ostos.setTuote(ostosDto.getTuote());
                         ostos.setYksikko(ostosDto.getYksikko());
                         ostos.setOstettu(ostosDto.getOstettu());
-                        Tuotteet matchingTuote = Arrays.stream(Tuotteet.values())
-                                .filter(t -> t.getTuote().contains(ostosDto.getTuote()))
-                                .findFirst()
-                                .orElse(null);
-                        ostos.setOsastoId(matchingTuote != null ? matchingTuote.getOsastoId() : 0);
+                        TuoteEntity matchingTuote = tuoteRepository.findByTuote(ostosDto.getTuote()).get();
+                        ostos.setOsastoId(matchingTuote.getOsasto());
                     } else if (!ostosListaEntity.getOstokset().isEmpty()
                             && ostosListaEntity.getOstokset().stream()
                                     .anyMatch(o -> o.getTuote().equals(ostosDto.getTuote())
@@ -123,11 +117,8 @@ public class OstosListaBusinessImpl implements OstosListaBusiness {
                         ostos.setYksikko(ostosDto.getYksikko());
                         ostos.setOstettu(ostosDto.getOstettu());
                         ostos.setOstosLista(ostosListaEntity);
-                        Tuotteet matchingTuote = Arrays.stream(Tuotteet.values())
-                                .filter(t -> t.getTuote().contains(ostosDto.getTuote()))
-                                .findFirst()
-                                .orElse(null);
-                        ostos.setOsastoId(matchingTuote != null ? matchingTuote.getOsastoId() : 0);
+                        TuoteEntity matchingTuote = tuoteRepository.findByTuote(ostosDto.getTuote()).get();
+                        ostos.setOsastoId(matchingTuote.getOsasto());
                         ostosListaEntity.getOstokset().add(ostos);
                     }
                 });
@@ -223,11 +214,14 @@ public class OstosListaBusinessImpl implements OstosListaBusiness {
         entity.setTuote(ostosDto.getTuote());
         entity.setYksikko(ostosDto.getYksikko());
         entity.setOstettu(ostosDto.getOstettu());
-        Tuotteet matchingTuote = Arrays.stream(Tuotteet.values())
-                .filter(t -> t.getTuote().contains(ostosDto.getTuote()))
-                .findFirst()
-                .orElse(null);
-        entity.setOsastoId(matchingTuote != null ? matchingTuote.getOsastoId() : 0);
+        /*
+         * and also do a check if frontend sends ostoslista or resepti that is in different state than
+         * in the database, include version and timestamp into the different entities (atleas ostoslista and resepti) 
+         * and add a check for version change. t.eg if frontend has version two and database 3.
+         * This adds possibility to simultaneos updating of ostoslista and resepti
+         */
+        TuoteEntity matchingTuote = tuoteRepository.findByTuote(ostosDto.getTuote()).get();
+        entity.setOsastoId(matchingTuote.getOsasto());
         return entity;
     }
 }

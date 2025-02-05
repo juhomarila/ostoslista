@@ -43,4 +43,10 @@ public class ReseptiEntity {
     private Integer ostoKerrat;
 
     private String originalLink;
+
+    private Instant created;
+
+    private Instant modified;
+
+    private Integer version;
 }

@@ -1,12 +1,11 @@
-package fi.ruoka.ostoslista.business;
+package fi.ruoka.ostoslista.service;
 
 import java.util.List;
 
 import fi.ruoka.ostoslista.composite.ReseptiOstoComposite;
 
-public interface ReseptiOstoBusiness {
-
+public interface StatsService {
     ReseptiOstoComposite findMostBoughtReseptiIdAndCountByYear(Integer year);
 
-    List<Integer> findAllAvailableYears();
+    List<Integer> findAllAvailableReseptiYears();
 }

@@ -55,4 +55,10 @@ public class OstosListaEntity {
     @CollectionTable(name = "ostos_lista_resepti", joinColumns = @JoinColumn(name = "ostos_lista_id"))
     @Column(name = "resepti_id")
     private List<Long> reseptiId;
+
+    private Instant created;
+
+    private Instant modified;
+
+    private Integer version;
 }
