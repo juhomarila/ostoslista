@@ -78,7 +78,9 @@ public class ReseptiBusinessImpl implements ReseptiBusiness {
                 });
                 reseptiEntity.setOhje(dto.getOhje());
                 reseptiEntity.setNimi(dto.getNimi());
-                reseptiEntity.setOstoKerrat(dto.getOstoKerrat()); // Not implemented in frontend
+                reseptiEntity.setModified(Instant.now());
+                reseptiEntity.setVersion(reseptiEntity.getVersion() + 1);
+                reseptiEntity.setOstoKerrat(dto.getOstoKerrat());
                 if (dto.getOriginalLink() != null) {
                     reseptiEntity.setOriginalLink(dto.getOriginalLink());
                 }
@@ -120,6 +122,9 @@ public class ReseptiBusinessImpl implements ReseptiBusiness {
         resepti.setRuokaAineet(ruokaAineet);
         resepti.setAdded(Instant.now());
         resepti.setNimi(dto.getNimi());
+        resepti.setCreated(Instant.now());
+        resepti.setModified(Instant.now());
+        resepti.setVersion(1);
         resepti.setOstoKerrat(dto.getOstoKerrat());
         ruokaAineet.forEach(ruokaAine -> {
             ruokaAine.setResepti(resepti);

@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import fi.ruoka.ostoslista.business.ReseptiOstoBusiness;
 import fi.ruoka.ostoslista.composite.ReseptiOstoComposite;
+import fi.ruoka.ostoslista.composite.ReseptiOstoWeekdayComposite;
 
 @Service
 public class StatsServiceImpl implements StatsService {
@@ -17,6 +18,16 @@ public class StatsServiceImpl implements StatsService {
     @Override
     public ReseptiOstoComposite findMostBoughtReseptiIdAndCountByYear(Integer year) {
         return reseptiOstoBusiness.findMostBoughtReseptiIdAndCountByYear(year);
+    }
+
+    @Override
+    public ReseptiOstoComposite findMostBoughtReseptiIdAndCountByYearAndMonth(Integer year, Integer month) {
+        return reseptiOstoBusiness.findMostBoughtReseptiIdAndCountByYearAndMonth(year, month);
+    }   
+
+    @Override
+    public List<ReseptiOstoWeekdayComposite> findMostBoughtReseptiIdAndCountByWeekday() {
+        return reseptiOstoBusiness.findMostBoughtReseptiIdAndCountByWeekday();
     }
 
     @Override

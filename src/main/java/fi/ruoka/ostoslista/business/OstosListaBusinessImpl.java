@@ -125,6 +125,8 @@ public class OstosListaBusinessImpl implements OstosListaBusiness {
                 ostosListaEntity.setNimi(dto.getNimi());
                 ostosListaEntity.setValmis(dto.isValmis());
                 ostosListaEntity.setReseptiId(dto.getReseptiId());
+                ostosListaEntity.setModified(Instant.now()); 
+                ostosListaEntity.setVersion(ostosListaEntity.getVersion() + 1);
                 repository.save(ostosListaEntity);
                 return Optional.of(ostosListaEntity);
             }
@@ -144,6 +146,8 @@ public class OstosListaBusinessImpl implements OstosListaBusiness {
         if (optOstosLista.isPresent()) {
             OstosListaEntity ostosLista = optOstosLista.get();
             ostosLista.setValmis(true);
+            ostosLista.setModified(Instant.now());
+            ostosLista.setVersion(ostosLista.getVersion() + 1);
             ostosLista.getOstokset().forEach(ostos -> {
                 if (ostos.getOstettu()) {
                     Optional<TuoteEntity> tuote = tuoteRepository.findByTuote(ostos.getTuote());
@@ -192,6 +196,9 @@ public class OstosListaBusinessImpl implements OstosListaBusiness {
     private OstosListaEntity saveOstosLista(OstosListaEntity ostosLista, OstosListaDto dto) {
         ostosLista.setPaiva(Instant.now());
         ostosLista.setNimi(dto.getNimi());
+        ostosLista.setCreated(Instant.now());
+        ostosLista.setModified(Instant.now());
+        ostosLista.setVersion(1);
         if (dto.getReseptiId() != null) {
             ostosLista.setReseptiId(dto.getReseptiId());
         }

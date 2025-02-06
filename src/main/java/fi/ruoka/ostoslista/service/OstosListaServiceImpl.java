@@ -90,6 +90,7 @@ public class OstosListaServiceImpl implements OstosListaService {
         reseptiIds.add(dto.getId());
         ostosListaDto.setReseptiId(reseptiIds);
         ostosListaDto.setId(id);
+        ostosListaDto.setVersion(entity.getVersion());
         return updateOstosLista(id, ostosListaDto);
     }
 
@@ -187,6 +188,10 @@ public class OstosListaServiceImpl implements OstosListaService {
         dto.setPaiva(entity.getPaiva());
         dto.setOstokset(ostosToDto(entity.getOstokset()));
         dto.setReseptiId(entity.getReseptiId());
+        dto.setValmis(entity.isValmis());
+        dto.setCreated(entity.getCreated());
+        dto.setModified(entity.getModified());
+        dto.setVersion(entity.getVersion());
 
         return dto;
     }

@@ -29,4 +29,7 @@ public class ReseptiDto {
     private Instant added;
     private String originalLink;
     private List<ReseptiOstoDto> reseptiOstot;
+    private Instant created;
+    private Instant modified;
+    private Integer version;
 }

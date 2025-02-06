@@ -23,4 +23,7 @@ public class OstosListaDto {
     private boolean valmis;
     private List<OstosDto> ostokset;
     private List<Long> reseptiId;
+    private Instant created;
+    private Instant modified;
+    private Integer version;
 }

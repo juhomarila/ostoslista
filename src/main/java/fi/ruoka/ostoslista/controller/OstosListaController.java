@@ -45,7 +45,7 @@ public class OstosListaController {
                 logger.postLogEnd("createOstosLista");
                 return vsr.getVr().validated ? new ResponseEntity<>(vsr.getT(), HttpStatus.OK)
                                 : new ResponseEntity<>(vsr.getVr().getErrorMsg(),
-                                                vsr.getVr().validated ? HttpStatus.BAD_REQUEST
+                                                !vsr.getVr().validated ? HttpStatus.BAD_REQUEST
                                                                 : HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
@@ -56,7 +56,7 @@ public class OstosListaController {
                 logger.postLogEnd("reseptiToOstosLista");
                 return vsr.getVr().validated ? new ResponseEntity<>(vsr.getT(), HttpStatus.OK)
                                 : new ResponseEntity<>(vsr.getVr().getErrorMsg(),
-                                                vsr.getVr().validated ? HttpStatus.BAD_REQUEST
+                                                !vsr.getVr().validated ? HttpStatus.BAD_REQUEST
                                                                 : HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
@@ -68,7 +68,7 @@ public class OstosListaController {
                 logger.postLogEnd("reseptiToExistingOstosLista");
                 return vsr.getVr().validated ? new ResponseEntity<>(vsr.getT(), HttpStatus.OK)
                                 : new ResponseEntity<>(vsr.getVr().getErrorMsg(),
-                                                vsr.getVr().validated ? HttpStatus.BAD_REQUEST
+                                                !vsr.getVr().validated ? HttpStatus.BAD_REQUEST
                                                                 : HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
@@ -85,7 +85,7 @@ public class OstosListaController {
                 logger.getLogStart("getOstosListaById");
                 var vsr = ostosListaService.getOstosListaById(id);
                 logger.getLogEnd("getOstosListaById");
-                return vsr.getVr().validated ? new ResponseEntity<>(HttpStatus.OK)
+                return vsr.getVr().validated ? new ResponseEntity<>(vsr.getT(), HttpStatus.OK)
                                 : new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
@@ -96,7 +96,7 @@ public class OstosListaController {
                 logger.putLogEnd("updateOstosLista");
                 return vsr.getVr().validated ? new ResponseEntity<>(vsr.getT(), HttpStatus.OK)
                                 : new ResponseEntity<>(vsr.getVr().getErrorMsg(),
-                                                vsr.getVr().validated ? HttpStatus.BAD_REQUEST : HttpStatus.NOT_FOUND);
+                                                !vsr.getVr().validated ? HttpStatus.BAD_REQUEST : HttpStatus.NOT_FOUND);
         }
 
         @PutMapping("/{id}/valmis")

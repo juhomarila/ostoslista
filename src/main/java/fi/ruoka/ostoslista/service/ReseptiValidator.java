@@ -1,11 +1,14 @@
 package fi.ruoka.ostoslista.service;
 
 import java.util.ArrayList;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import fi.ruoka.ostoslista.dto.OstosListaDto;
 import fi.ruoka.ostoslista.dto.ReseptiDto;
+import fi.ruoka.ostoslista.entity.ReseptiEntity;
 import fi.ruoka.ostoslista.repository.ReseptiRepository;
 
 @Service
@@ -39,6 +42,8 @@ public class ReseptiValidator {
 
         checkRequiredFields(dto, errorMsg, true);
 
+        checkVersion(dto, id, errorMsg);
+
         if (!errorMsg.isEmpty()) {
             return new ValidationResult(errorMsg, false);
         }
@@ -61,6 +66,17 @@ public class ReseptiValidator {
                     errorMsg.add(ValidationError.VE001 + ".yksikko");
                 }
             });
+        }
+    }
+
+        private void checkVersion(ReseptiDto dto, Long id, ArrayList<String> errorMsg) {
+        if (dto.getVersion() == null) {
+            errorMsg.add(ValidationError.VE001 + ".version");
+        } else {
+            Optional<ReseptiEntity> optOstosLista = reseptiRepository.findById(id);
+            if (optOstosLista.isPresent() && !dto.getVersion().equals(optOstosLista.get().getVersion())) {
+                errorMsg.add(ValidationError.VE007 + ".version");
+            }
         }
     }
 }

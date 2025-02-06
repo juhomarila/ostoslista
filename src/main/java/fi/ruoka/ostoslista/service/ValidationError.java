@@ -12,6 +12,7 @@ public class ValidationError {
     public static final String VE004 = "VE004: forbidden";
     public static final String VE005 = "VE005: doesNotExist";
     public static final String VE006 = "VE006: exists";
+    public static final String VE007 = "VE007: mismatch";
     public static final String RE101 = "RE101: recipe not found ";
     public static final String RE102 = "RE102: recipe data validation failed ";
     public static final String RE103 = "RE103: corrupt recipe data ";
