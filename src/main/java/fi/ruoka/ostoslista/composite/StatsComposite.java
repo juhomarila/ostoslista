@@ -9,7 +9,7 @@ import lombok.ToString;
 @Setter
 @NoArgsConstructor
 @ToString
-public class ReseptiOstoComposite {
-    private Long reseptiEntityId;
+public class StatsComposite {
+    private Long entityId;
     private Long count;
 }

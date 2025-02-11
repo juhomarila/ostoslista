@@ -11,8 +11,8 @@ import lombok.ToString;
 @Setter
 @NoArgsConstructor
 @ToString
-public class ReseptiOstoWeekdayComposite {
-    private Long reseptiEntityId;
+public class StatsWeekdayComposite {
+    private Long entityId;
     private Long count;
     private BigDecimal weekday;
 }

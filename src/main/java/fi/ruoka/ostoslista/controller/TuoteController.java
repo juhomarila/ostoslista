@@ -58,6 +58,14 @@ public class TuoteController {
         return vsr.getT().isEmpty() ? ResponseEntity.noContent().build() : ResponseEntity.ok(vsr.getT());
     }
 
+    @GetMapping("/active")
+    public ResponseEntity<?> getActiveTuotteet() {
+        logger.getLogStart("getActiveTuotteet");
+        var vsr = tuoteService.getActiveTuotteet();
+        logger.getLogEnd("getActiveTuotteet");
+        return vsr.getT().isEmpty() ? ResponseEntity.noContent().build() : ResponseEntity.ok(vsr.getT());
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<?> getTuoteById(@PathVariable Long id) {
         logger.getLogStart("getTuoteById");

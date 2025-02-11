@@ -12,6 +12,8 @@ services:
       - "5432:5432"
     volumes:
       - ./data:/var/lib/postgresql/data
+    networks:
+      - ostoslista
   app:
     depends_on: 
       - db
@@ -32,3 +34,8 @@ services:
       secret: ${secret} 
       userEntity: ${userEntity}
       userEntityPass: ${userEntityPass}
+    networks:
+      - ostoslista
+networks:
+  ostoslista:
+    external: true

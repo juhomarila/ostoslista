@@ -1,5 +1,6 @@
 package fi.ruoka.ostoslista.entity;
 
+import java.time.Instant;
 import java.util.List;
 
 import jakarta.persistence.CascadeType;
@@ -40,4 +41,14 @@ public class TuoteEntity {
     private Integer ostoKerrat;
 
     private Integer kplOstettu;
+
+    private Boolean active;
+
+    private Instant created;
+    
+    private Instant modified;
+
+    private Double vertailuHinta;
+
+    private String vertailuYksikkö;
 }

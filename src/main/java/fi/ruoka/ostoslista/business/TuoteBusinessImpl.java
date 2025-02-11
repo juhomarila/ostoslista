@@ -45,6 +45,7 @@ public class TuoteBusinessImpl implements TuoteBusiness {
             tuote.setYksikko(dto.getYksikko());
             tuote.setOstoKerrat(0);
             tuote.setKplOstettu(0);
+            tuote.setActive(true);
             tuote = tuoteRepository.save(tuote);
             return Optional.of(tuote);
         } catch (Exception e) {
@@ -57,6 +58,11 @@ public class TuoteBusinessImpl implements TuoteBusiness {
     @Override
     public List<TuoteEntity> getAllTuotteet() {
         return tuoteRepository.findAll();
+    }
+
+    @Override
+    public List<TuoteEntity> getActiveTuotteet() {
+        return tuoteRepository.findByActiveTrue();
     }
 
     @Override

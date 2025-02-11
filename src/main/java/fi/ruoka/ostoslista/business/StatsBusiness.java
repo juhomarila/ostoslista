@@ -1,18 +1,19 @@
-package fi.ruoka.ostoslista.service;
+package fi.ruoka.ostoslista.business;
 
 import java.util.List;
 
 import fi.ruoka.ostoslista.composite.StatsComposite;
 import fi.ruoka.ostoslista.composite.StatsWeekdayComposite;
 
-public interface StatsService {
+public interface StatsBusiness {
+
     StatsComposite findMostBoughtReseptiIdAndCountByYear(Integer year);
 
     StatsComposite findMostBoughtReseptiIdAndCountByYearAndMonth(Integer year, Integer month);
 
     List<StatsWeekdayComposite> findMostBoughtReseptiIdAndCountByWeekday();
 
-    List<Integer> findAllAvailableReseptiYears();
+    List<Integer> findAllAvailableYearsForResepti();
 
     StatsComposite findMostBoughtTuoteIdAndCountByYear(Integer year);
 
@@ -20,5 +21,5 @@ public interface StatsService {
 
     List<StatsWeekdayComposite> findMostBoughtTuoteIdAndCountByWeekday();
 
-    List<Integer> findAllAvailableTuoteYears();
+    List<Integer> findAllAvailableYearsForTuote();
 }

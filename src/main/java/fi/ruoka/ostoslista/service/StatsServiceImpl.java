@@ -5,34 +5,54 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import fi.ruoka.ostoslista.business.ReseptiOstoBusiness;
-import fi.ruoka.ostoslista.composite.ReseptiOstoComposite;
-import fi.ruoka.ostoslista.composite.ReseptiOstoWeekdayComposite;
+import fi.ruoka.ostoslista.business.StatsBusiness;
+import fi.ruoka.ostoslista.composite.StatsComposite;
+import fi.ruoka.ostoslista.composite.StatsWeekdayComposite;
 
 @Service
 public class StatsServiceImpl implements StatsService {
 
     @Autowired
-    private ReseptiOstoBusiness reseptiOstoBusiness;
+    private StatsBusiness statsBusiness;
 
     @Override
-    public ReseptiOstoComposite findMostBoughtReseptiIdAndCountByYear(Integer year) {
-        return reseptiOstoBusiness.findMostBoughtReseptiIdAndCountByYear(year);
+    public StatsComposite findMostBoughtReseptiIdAndCountByYear(Integer year) {
+        return statsBusiness.findMostBoughtReseptiIdAndCountByYear(year);
     }
 
     @Override
-    public ReseptiOstoComposite findMostBoughtReseptiIdAndCountByYearAndMonth(Integer year, Integer month) {
-        return reseptiOstoBusiness.findMostBoughtReseptiIdAndCountByYearAndMonth(year, month);
+    public StatsComposite findMostBoughtReseptiIdAndCountByYearAndMonth(Integer year, Integer month) {
+        return statsBusiness.findMostBoughtReseptiIdAndCountByYearAndMonth(year, month);
     }   
 
     @Override
-    public List<ReseptiOstoWeekdayComposite> findMostBoughtReseptiIdAndCountByWeekday() {
-        return reseptiOstoBusiness.findMostBoughtReseptiIdAndCountByWeekday();
+    public List<StatsWeekdayComposite> findMostBoughtReseptiIdAndCountByWeekday() {
+        return statsBusiness.findMostBoughtReseptiIdAndCountByWeekday();
     }
 
     @Override
     public List<Integer> findAllAvailableReseptiYears() {
-        return reseptiOstoBusiness.findAllAvailableYears();
+        return statsBusiness.findAllAvailableYearsForResepti();
+    }
+
+    @Override
+    public StatsComposite findMostBoughtTuoteIdAndCountByYear(Integer year) {
+        return statsBusiness.findMostBoughtTuoteIdAndCountByYear(year);
+    }
+
+    @Override
+    public StatsComposite findMostBoughtTuoteIdAndCountByYearAndMonth(Integer year, Integer month) {
+        return statsBusiness.findMostBoughtTuoteIdAndCountByYearAndMonth(year, month);
+    }   
+
+    @Override
+    public List<StatsWeekdayComposite> findMostBoughtTuoteIdAndCountByWeekday() {
+        return statsBusiness.findMostBoughtTuoteIdAndCountByWeekday();
+    }
+
+    @Override
+    public List<Integer> findAllAvailableTuoteYears() {
+        return statsBusiness.findAllAvailableYearsForTuote();
     }
 
 }

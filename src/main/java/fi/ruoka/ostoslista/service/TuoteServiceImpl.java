@@ -67,6 +67,23 @@ public class TuoteServiceImpl implements TuoteService {
     }
 
     @Override
+    public ValidatedServiceResult<List<TuoteDto>> getActiveTuotteet() {
+        List<TuoteDto> tuoteDtos = business.getActiveTuotteet().stream().map(tuote -> tuoteToDto(tuote))
+                .collect(Collectors.toList());
+        List<TuoteDto> validatedTuoteDtos = new ArrayList<>();
+        for (TuoteDto tuoteDto : tuoteDtos) {
+            var vr = validator.validate(tuoteDto, false);
+            if (vr.validated) {
+                validatedTuoteDtos.add(tuoteDto);
+            } else {
+                logger.logValidationAndIdFailure(ValidationError.TE102 + vr.getErrorMsg(),
+                        ValidationError.TE103 + tuoteDto.getId().toString());
+            }
+        }
+        return new ValidatedServiceResult<>(validatedTuoteDtos, new ValidationResult(true));
+    }
+
+    @Override
     public ValidatedServiceResult<TuoteDto> getTuoteById(Long id) {
         Optional<TuoteEntity> optTuote = business.getTuoteById(id);
         var vr = new ValidationResult();
@@ -136,6 +153,9 @@ public class TuoteServiceImpl implements TuoteService {
         dto.setYksikko(tuote.getYksikko());
         dto.setOstoKerrat(tuote.getOstoKerrat());
         dto.setKplOstettu(tuote.getKplOstettu());
+        dto.setActive(tuote.getActive());
+        dto.setVertailuHinta(tuote.getVertailuHinta());
+        dto.setVertailuYksikkö(tuote.getVertailuYksikkö());
         return dto;
     }
 

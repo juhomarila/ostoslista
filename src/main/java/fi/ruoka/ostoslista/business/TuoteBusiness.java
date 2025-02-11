@@ -18,4 +18,6 @@ public interface TuoteBusiness {
     Optional<TuoteEntity> updateTuote(Long id, TuoteDto dto);
 
     List<String> getYksikot();
+
+    List<TuoteEntity> getActiveTuotteet();
 }

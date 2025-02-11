@@ -16,5 +16,7 @@ public interface TuoteService {
     ValidatedServiceResult<TuoteDto> updateTuote(Long id, TuoteDto dto);
 
     ValidatedServiceResult<List<String>> getYksikot();
+
+    ValidatedServiceResult<List<TuoteDto>> getActiveTuotteet();
     
 }
