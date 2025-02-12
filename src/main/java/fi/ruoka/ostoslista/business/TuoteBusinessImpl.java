@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import fi.ruoka.ostoslista.dto.TuoteDto;
+import fi.ruoka.ostoslista.elasticsearch.ElasticTuoteRepository;
+import fi.ruoka.ostoslista.elasticsearch.TuoteDocument;
 import fi.ruoka.ostoslista.entity.TuoteEntity;
 import fi.ruoka.ostoslista.enums.Yksikko;
 import fi.ruoka.ostoslista.repository.TuoteRepository;
@@ -19,6 +21,9 @@ public class TuoteBusinessImpl implements TuoteBusiness {
 
     @Autowired
     private TuoteRepository tuoteRepository;
+
+    @Autowired
+    private ElasticTuoteRepository elasticTuoteRepository;
 
     private static final Logger logger = LoggerFactory.getLogger(TuoteBusinessImpl.class);
 
@@ -106,5 +111,11 @@ public class TuoteBusinessImpl implements TuoteBusiness {
             e.printStackTrace();
             return Optional.empty();
         }
+    }
+
+    @Override
+    public List<TuoteDocument> getTuoteByTuote(String tuote) {
+        return elasticTuoteRepository.findByTuoteFuzzy(tuote);
+        //return elasticTuoteRepository.findByTuoteContaining(tuote);
     }
 }

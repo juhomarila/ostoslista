@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import fi.ruoka.ostoslista.business.TuoteBusiness;
 import fi.ruoka.ostoslista.dto.TuoteDto;
+import fi.ruoka.ostoslista.elasticsearch.TuoteDocument;
 import fi.ruoka.ostoslista.entity.TuoteEntity;
 import fi.ruoka.ostoslista.logging.OstosListaLogger;
 
@@ -144,6 +145,12 @@ public class TuoteServiceImpl implements TuoteService {
         return new ValidatedServiceResult<>(null, vr);
     }
 
+    @Override
+    public ValidatedServiceResult<List<TuoteDocument>> getTuoteByTuote(String tuote) {
+        List<TuoteDocument> tuoteDocuments = business.getTuoteByTuote(tuote);
+        return new ValidatedServiceResult<>(tuoteDocuments, new ValidationResult(true));
+    }
+
     private TuoteDto tuoteToDto(TuoteEntity tuote) {
         var dto = new TuoteDto();
         dto.setId(tuote.getId());
@@ -156,6 +163,7 @@ public class TuoteServiceImpl implements TuoteService {
         dto.setActive(tuote.getActive());
         dto.setVertailuHinta(tuote.getVertailuHinta());
         dto.setVertailuYksikkö(tuote.getVertailuYksikkö());
+        dto.setEan(tuote.getEan());
         return dto;
     }
 

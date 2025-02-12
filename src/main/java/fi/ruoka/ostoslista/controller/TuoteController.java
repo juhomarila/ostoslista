@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import fi.ruoka.ostoslista.dto.TuoteDto;
@@ -55,6 +56,14 @@ public class TuoteController {
         logger.getLogStart("getAllTuotteet");
         var vsr = tuoteService.getAllTuotteet();
         logger.getLogEnd("getAllTuotteet");
+        return vsr.getT().isEmpty() ? ResponseEntity.noContent().build() : ResponseEntity.ok(vsr.getT());
+    }
+
+    @GetMapping("/elastic")
+    public ResponseEntity<?> getTuoteByTuote(@RequestParam String tuote) {
+        logger.getLogStart("getTuoteByTuote");
+        var vsr = tuoteService.getTuoteByTuote(tuote);
+        logger.getLogEnd("getTuoteByTuote");
         return vsr.getT().isEmpty() ? ResponseEntity.noContent().build() : ResponseEntity.ok(vsr.getT());
     }
 

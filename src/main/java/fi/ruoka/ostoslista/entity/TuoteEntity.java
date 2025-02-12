@@ -51,4 +51,6 @@ public class TuoteEntity {
     private Double vertailuHinta;
 
     private String vertailuYksikkö;
+
+    private Long ean;
 }

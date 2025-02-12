@@ -3,6 +3,7 @@ package fi.ruoka.ostoslista.service;
 import java.util.List;
 
 import fi.ruoka.ostoslista.dto.TuoteDto;
+import fi.ruoka.ostoslista.elasticsearch.TuoteDocument;
 
 public interface TuoteService {
     ValidatedServiceResult<TuoteDto> addTuote(TuoteDto dto);
@@ -17,6 +18,7 @@ public interface TuoteService {
 
     ValidatedServiceResult<List<String>> getYksikot();
 
-    ValidatedServiceResult<List<TuoteDto>> getActiveTuotteet();
+    ValidatedServiceResult<List<TuoteDto>> getActiveTuotteet();   
     
+    ValidatedServiceResult<List<TuoteDocument>> getTuoteByTuote(String tuote);
 }

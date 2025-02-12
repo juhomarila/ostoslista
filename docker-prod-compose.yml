@@ -12,9 +12,17 @@ services:
       - "5432:5432"
     volumes:
       - ./data:/var/lib/postgresql/data
+    networks:
+      - ostoslista
+    healthcheck:
+      test: ["CMD-SHELL", "sh -c 'pg_isready -U ${user} -d ${db}'"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
   app:
     depends_on: 
-      - db
+      db:
+        condition: service_healthy
     image: juhomarila/ostoslista-app:latest
     container_name: ostoslista
     ports:
@@ -27,3 +35,23 @@ services:
       secret: ${secret} 
       userEntity: ${userEntity}
       userEntityPass: ${userEntityPass}
+    networks:
+      - ostoslista
+  elastic:
+    depends_on: 
+      db:
+        condition: service_healthy
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.17.2
+    container_name: elasticsearch
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+    ports:
+      - "9200:9200"
+    networks:
+      - ostoslista
+    volumes:
+      - ./elastic:/usr/share/elasticsearch/data
+networks:
+  ostoslista:
+    external: true
