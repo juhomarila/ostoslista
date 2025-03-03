@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import fi.ruoka.ostoslista.dto.TuoteDto;
+import fi.ruoka.ostoslista.elasticsearch.SearchClickTrackingService;
 import fi.ruoka.ostoslista.logging.OstosListaLogger;
 import fi.ruoka.ostoslista.service.TuoteService;
 import jakarta.validation.Valid;
@@ -26,6 +27,9 @@ public class TuoteController {
 
     @Autowired
     private TuoteService tuoteService;
+
+    @Autowired
+    private SearchClickTrackingService searchClickTrackingService;
 
     private final OstosListaLogger logger;
 
@@ -103,5 +107,11 @@ public class TuoteController {
         return vsr.getVr().validated ? new ResponseEntity<>(vsr.getT(), HttpStatus.OK)
                 : new ResponseEntity<>(vsr.getVr().getErrorMsg(),
                         vsr.getVr().validated ? HttpStatus.BAD_REQUEST : HttpStatus.NOT_FOUND);
+    }
+
+    @PostMapping("/select/{searchTerm}/{productId}")
+    public ResponseEntity<Void> trackSearchClick(@PathVariable String searchTerm, @PathVariable Long productId) {
+        searchClickTrackingService.trackClick(searchTerm, productId);
+        return ResponseEntity.ok().build();
     }
 }

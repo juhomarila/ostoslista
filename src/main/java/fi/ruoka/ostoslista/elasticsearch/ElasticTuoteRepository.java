@@ -11,6 +11,30 @@ import jakarta.persistence.MappedSuperclass;
 public interface ElasticTuoteRepository extends ElasticsearchRepository<TuoteDocument, Long> {
     List<TuoteDocument> findByTuoteContaining(String tuote);
 
-    @Query("{\"match\": {\"tuote\": {\"query\": \"?0\", \"fuzziness\": \"AUTO\"}}}")
+    @Query("""
+        {
+          "function_score": {
+            "query": {
+              "match": {
+                "tuote": {
+                  "query": "?0",
+                  "fuzziness": "AUTO:1,4"
+                }
+              }
+            },
+            "functions": [
+              {
+                "field_value_factor": {
+                  "field": "selectionCount",
+                  "factor": 5,
+                  "modifier": "none",
+                  "missing": 1
+                }
+              }
+            ],
+            "boost_mode": "sum"
+          }
+        }
+    """)
     List<TuoteDocument> findByTuoteFuzzy(String tuote);
 }
