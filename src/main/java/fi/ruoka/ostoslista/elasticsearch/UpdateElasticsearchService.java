@@ -18,7 +18,7 @@ public class UpdateElasticsearchService {
 
     private static final Logger logger = LoggerFactory.getLogger(UpdateElasticsearchService.class);
 
-    @Scheduled(fixedRate = 60000)
+    @Scheduled(fixedRate = 600000)
     public void updateSelectionCounts() {
         logger.info("Updating selection counts in Elasticsearch");
 
